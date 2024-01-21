@@ -12,8 +12,11 @@ class SearchViewController: UIViewController {
     @IBOutlet weak var searchBar: UISearchBar!
     
     @IBOutlet weak var tableViewHeaderView: UIView!
+    @IBOutlet weak var recentSearchLabel: UILabel!
     @IBOutlet weak var removeAllButton: UIButton!
-
+    
+    @IBOutlet weak var emptyImageView: UIImageView!
+    @IBOutlet weak var noKeywordsMessageLabel: UILabel!
     @IBOutlet weak var recentKeywordListTableView: UITableView!
     
     private let nickname = UserDefaults.standard.string(forKey: UserDefaultsKeys.nickname.rawValue) ?? ""
@@ -23,6 +26,7 @@ class SearchViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        configureUI()
         configureUserEvents()
         configureOthers()
         configureTableView()
@@ -54,7 +58,29 @@ extension SearchViewController: UIViewControllerConfigurationProtocol {
     }
     
     func configureUI() {
-
+        view.backgroundColor = Colors.backgroundColor
+        
+        searchBar.placeholder = "브랜드, 상품, 프로필, 태그 등"
+        searchBar.searchBarStyle = .minimal
+        searchBar.barStyle = .black
+        
+        recentSearchLabel.text = "최근 검색"
+        recentSearchLabel.font = .systemFont(ofSize: 16.0, weight: .bold)
+        recentSearchLabel.textColor = Colors.textColor
+        
+        removeAllButton.setTitle("모두 지우기", for: .normal)
+        removeAllButton.setTitleColor(Colors.pointColor, for: .normal)
+        removeAllButton.titleLabel?.font = .systemFont(ofSize: 16.0, weight: .bold)
+        
+        emptyImageView.image = UIImage(named: Images.empty)
+        emptyImageView.contentMode = .scaleAspectFit
+        
+        noKeywordsMessageLabel.text = "최근 검색어가 없어요"
+        noKeywordsMessageLabel.textAlignment = .center
+        noKeywordsMessageLabel.textColor = Colors.textColor
+        noKeywordsMessageLabel.font = .systemFont(ofSize: 18.0, weight: .bold)
+        
+        recentKeywordListTableView.backgroundColor = Colors.backgroundColor
     }
     
     func configureOthers() {

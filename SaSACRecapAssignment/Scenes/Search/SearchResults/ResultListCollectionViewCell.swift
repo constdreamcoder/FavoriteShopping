@@ -21,8 +21,25 @@ class ResultListCollectionViewCell: UICollectionViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        
+        thumbnailImageView.contentMode = .scaleToFill
         thumbnailImageView.layer.cornerRadius = 16
-
+        
+        mallNameLabel.textAlignment = .left
+        mallNameLabel.textColor = .lightGray
+        mallNameLabel.font = .systemFont(ofSize: 14.0)
+        
+        titleLabel.textColor = Colors.textColor
+        titleLabel.textAlignment = .left
+        titleLabel.font = .systemFont(ofSize: 16.0)
+        titleLabel.numberOfLines = 2
+        
+        priceLabel.textAlignment = .left
+        priceLabel.textColor = Colors.textColor
+        priceLabel.font = .systemFont(ofSize: 18.0, weight: .bold)
+        
+        heartButton.setImage(UIImage(systemName: "heart"), for: .normal)
+        heartButton.backgroundColor = .white
         DispatchQueue.main.async {
             self.heartButton.layer.cornerRadius = self.heartButton.frame.width / 2
         }

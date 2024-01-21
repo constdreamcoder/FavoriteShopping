@@ -19,6 +19,7 @@ class SearchDetailViewController: UIViewController {
         super.viewDidLoad()
 
         configureNavigationBar()
+        configureUI()
         configureOthers()
     }
 }
@@ -64,7 +65,7 @@ extension SearchDetailViewController: UIViewControllerConfigurationProtocol {
     }
     
     func configureUI() {
-        
+        view.backgroundColor = Colors.backgroundColor
     }
     
     func configureOthers() {

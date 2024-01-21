@@ -35,10 +35,13 @@ extension ProfileSelectionViewController: UIViewControllerConfigurationProtocol 
     }
     
     func configureUI() {
+        view.backgroundColor = Colors.backgroundColor
+
         selectedProfileImageView.layer.cornerRadius = selectedProfileImageView.frame.width / 2
         selectedProfileImageView.layer.borderColor = Colors.pointColor.cgColor
         selectedProfileImageView.layer.borderWidth = 5
         selectedProfileImageView.image = UIImage(named: selectedProfileName)
+        selectedProfileImageView.contentMode = .scaleAspectFit
         
         profileListCollectionView.backgroundColor = .clear
     }

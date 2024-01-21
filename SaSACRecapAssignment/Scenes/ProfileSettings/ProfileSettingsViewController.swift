@@ -50,10 +50,8 @@ class ProfileSettingsViewController: UIViewController {
         super.viewWillDisappear(animated)
         
         if isMovingFromParent {
-            if !editMode {
-                UserDefaults.standard.set(nil, forKey: UserDefaultsKeys.currentProfileImageName.rawValue)
-                UserDefaults.standard.set(nil, forKey: UserDefaultsKeys.nickname.rawValue)
-            }
+            UserDefaults.standard.set(nil, forKey: UserDefaultsKeys.selectedProfileImageName.rawValue)
+            nicknameTextField.text = nil
         }
     }
 
@@ -115,17 +113,34 @@ extension ProfileSettingsViewController: UIViewControllerConfigurationProtocol {
     }
     
     func configureUI() {
+        view.backgroundColor = Colors.backgroundColor
+
         profileButton.layer.cornerRadius = profileButton.frame.width / 2
         profileButton.clipsToBounds = true
         profileButton.layer.borderColor = Colors.pointColor.cgColor
         profileButton.layer.borderWidth = 5
         
+        cameraImageView.image = UIImage(named: Images.camera)
+        cameraImageView.contentMode = .scaleAspectFit
+        
         nicknameTextField.placeholder = "닉네임을 입력해주세요 :)"
         nicknameTextField.attributedPlaceholder = NSAttributedString(string: nicknameTextField.placeholder!, attributes: [NSAttributedString.Key.foregroundColor : UIColor.darkGray])
+        nicknameTextField.font = .systemFont(ofSize: 16.0)
+        nicknameTextField.textColor = Colors.textColor
+        nicknameTextField.textAlignment = .left
+        nicknameTextField.borderStyle = .none
         
         let nickname = editMode ? currentUserNickname : UserDefaults.standard.string(forKey: UserDefaultsKeys.nickname.rawValue) ?? ""
         nicknameTextField.text = nickname
         
+        errorMessageLabel.textAlignment = .left
+        errorMessageLabel.textColor = Colors.textColor
+        errorMessageLabel.numberOfLines = 2
+        errorMessageLabel.font = .systemFont(ofSize: 14.0)
+        
+        completitonButton.setTitle("완료", for: .normal)
+        completitonButton.setTitleColor(Colors.textColor, for: .normal)
+        completitonButton.titleLabel?.font = .systemFont(ofSize: 18.0, weight: .bold)
         completitonButton.layer.cornerRadius = 8
     }
     

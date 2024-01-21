@@ -26,4 +26,14 @@ enum ProfileImages: String, CaseIterable {
 
 enum Images {
     static let noImage = "no_image"
+    
+    // Onboarding Scene
+    static let sesacShopping = "sesacShopping"
+    static let onboarding = "onboarding"
+    
+    // Main Scene
+    static let empty = "empty"
+    
+    // Profile Scene
+    static let camera = "camera"
 }

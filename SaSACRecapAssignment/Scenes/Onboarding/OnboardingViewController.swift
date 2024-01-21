@@ -9,6 +9,8 @@ import UIKit
 
 class OnboardingViewController: UIViewController {
 
+    @IBOutlet weak var appLogoImageView: UIImageView!
+    @IBOutlet weak var onboardingImageView: UIImageView!
     @IBOutlet weak var startButton: UIButton!
     
     override func viewDidLoad() {
@@ -39,6 +41,17 @@ extension OnboardingViewController: UIViewControllerConfigurationProtocol {
     }
     
     func configureUI() {
+        view.backgroundColor = Colors.backgroundColor
+        
+        appLogoImageView.image = UIImage(named: Images.sesacShopping)
+        appLogoImageView.contentMode = .scaleAspectFit
+        
+        onboardingImageView.image = UIImage(named: Images.onboarding)
+        onboardingImageView.contentMode = .scaleAspectFit
+        
+        startButton.setTitle("시작하기", for: .normal)
+        startButton.setTitleColor(Colors.textColor, for: .normal)
+        startButton.titleLabel?.font = .systemFont(ofSize: 18.0, weight: .bold)
         startButton.layer.cornerRadius = 8
     }
     

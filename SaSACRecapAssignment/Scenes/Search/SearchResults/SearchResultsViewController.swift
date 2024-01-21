@@ -133,31 +133,50 @@ extension SearchResultsViewController: UIViewControllerConfigurationProtocol {
     }
     
     func configureUI() {
+        view.backgroundColor = Colors.backgroundColor
+        
         resultCountLabel.text = "\(totalNumberSearched.putCommaEveryThreeDigits) 개의 검색 결과"
+        resultCountLabel.textColor = Colors.pointColor
+        resultCountLabel.textAlignment = .left
+        resultCountLabel.font = .systemFont(ofSize: 16.0, weight: .bold)
 
+        byAccuracyButton.setTitle("정확도", for: .normal)
+        byAccuracyButton.setTitleColor(.black, for: .normal)
+        byAccuracyButton.titleLabel?.font = .systemFont(ofSize: 15.0)
+        byAccuracyButton.backgroundColor = .white
         byAccuracyButton.layer.cornerRadius = 8
         byAccuracyButton.layer.borderColor = UIColor.white.cgColor
         byAccuracyButton.layer.borderWidth = 1
-        byAccuracyButton.setTitleColor(.black, for: .normal)
-        byAccuracyButton.backgroundColor = .white
+        byAccuracyButton.contentEdgeInsets = .init(top: 0, left: 6, bottom: 0, right: 6)
         
-        byDateButton.layer.cornerRadius = 8
-        byDateButton.layer.borderColor = Colors.textColor.cgColor
-        byDateButton.layer.borderWidth = 1
+        byDateButton.setTitle("날짜순", for: .normal)
         byDateButton.setTitleColor(Colors.textColor, for: .normal)
+        byDateButton.titleLabel?.font = .systemFont(ofSize: 15.0)
         byDateButton.backgroundColor = Colors.backgroundColor
+        byDateButton.layer.cornerRadius = 8
+        byDateButton.layer.borderColor = UIColor.white.cgColor
+        byDateButton.layer.borderWidth = 1
+        byDateButton.contentEdgeInsets = .init(top: 0, left: 6, bottom: 0, right: 6)
         
-        byHighestPriceButton.layer.cornerRadius = 8
-        byHighestPriceButton.layer.borderColor = Colors.textColor.cgColor
-        byHighestPriceButton.layer.borderWidth = 1
+        byHighestPriceButton.setTitle("가격높은순", for: .normal)
+        byHighestPriceButton.titleLabel?.font = .systemFont(ofSize: 15.0)
         byHighestPriceButton.setTitleColor(Colors.textColor, for: .normal)
         byHighestPriceButton.backgroundColor = Colors.backgroundColor
-        
-        byLowestPriceButton.layer.cornerRadius = 8
-        byLowestPriceButton.layer.borderColor = Colors.textColor.cgColor
-        byLowestPriceButton.layer.borderWidth = 1
+        byHighestPriceButton.layer.cornerRadius = 8
+        byHighestPriceButton.layer.borderColor = UIColor.white.cgColor
+        byHighestPriceButton.layer.borderWidth = 1
+        byHighestPriceButton.contentEdgeInsets = .init(top: 0, left: 6, bottom: 0, right: 6)
+       
+        byLowestPriceButton.setTitle("가격낮은순", for: .normal)
+        byLowestPriceButton.titleLabel?.font = .systemFont(ofSize: 15.0)
         byLowestPriceButton.setTitleColor(Colors.textColor, for: .normal)
         byLowestPriceButton.backgroundColor = Colors.backgroundColor
+        byLowestPriceButton.layer.cornerRadius = 8
+        byLowestPriceButton.layer.borderColor = UIColor.white.cgColor
+        byLowestPriceButton.layer.borderWidth = 1
+        byLowestPriceButton.contentEdgeInsets = .init(top: 0, left: 6, bottom: 0, right: 6)
+        
+        resultListCollectionView.backgroundColor = .clear
     }
     
     func configureOthers() {

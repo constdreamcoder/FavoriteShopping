@@ -63,11 +63,23 @@ extension SettingsViewController: UIViewControllerConfigurationProtocol {
     }
     
     func configureUI() {
+        userProfileContainerView.backgroundColor = Colors.settingsElementBackgroundColor
         userProfileContainerView.layer.cornerRadius = 8
         
+        profileImageView.contentMode = .scaleAspectFit
         profileImageView.layer.cornerRadius = profileImageView.frame.width / 2
         profileImageView.layer.borderWidth = 4
         profileImageView.layer.borderColor = Colors.pointColor.cgColor
+        
+        nicknameLabel.font = .systemFont(ofSize: 18.0, weight: .semibold)
+        nicknameLabel.textColor = Colors.textColor
+        nicknameLabel.textAlignment = .left
+        
+        heartCountLabel.font = .systemFont(ofSize: 14.0, weight: .semibold)
+        heartCountLabel.textAlignment = .left
+        heartCountLabel.textColor = Colors.textColor
+        
+        settingsTableView.backgroundColor = .clear
     }
     
     func configureOthers() {
@@ -100,6 +112,10 @@ extension SettingsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "SettingTableViewCell")!
         
+        cell.selectionStyle = .none
+        cell.backgroundColor = Colors.settingsElementBackgroundColor
+        cell.textLabel?.textColor = Colors.textColor
+
         if indexPath.row == 0  {
             cell.layer.cornerRadius = 8
             cell.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
@@ -109,9 +125,7 @@ extension SettingsViewController: UITableViewDataSource {
             cell.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
             cell.layer.masksToBounds = true
         }
-            
-        cell.selectionStyle = .none
-
+        
         cell.textLabel?.text = settingsList[indexPath.row]
         
         return cell

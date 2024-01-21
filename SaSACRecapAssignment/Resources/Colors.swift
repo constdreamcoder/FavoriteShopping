@@ -11,4 +11,5 @@ enum Colors {
     static let backgroundColor = UIColor(named: "backgroundColor")!
     static let pointColor = UIColor(named: "pointColor")!
     static let textColor = UIColor(named: "textColor")!
+    static let settingsElementBackgroundColor = UIColor(named: "settingsElementBackgroundColor")!
 }

@@ -16,6 +16,8 @@ class ProfileListCollectionViewCell: UICollectionViewCell {
         
         backgroundColor = .clear
         
+        referenceProfileImageView.contentMode = .scaleAspectFit
+        
         DispatchQueue.main.async {
             self.referenceProfileImageView.layer.cornerRadius = self.referenceProfileImageView.frame.width / 2
         }
