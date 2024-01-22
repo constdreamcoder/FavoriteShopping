@@ -10,11 +10,13 @@ import WebKit
 
 class SearchDetailViewController: UIViewController {
     
+    // MARK: - Properties
     @IBOutlet weak var webView: WKWebView!
     
     var productTitle: String = ""
     var productId: String = ""
 
+    // MARK: - Life Cycl Methods
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -24,6 +26,7 @@ class SearchDetailViewController: UIViewController {
     }
 }
 
+// MARK: - User Events Methods
 extension SearchDetailViewController {
     @objc func rightBarButtonItemTapped() {
         guard var heartPressedList = UserDefaults.standard.dictionary(forKey: UserDefaultsKeys.heartPressedList.rawValue) else { return }
@@ -44,6 +47,7 @@ extension SearchDetailViewController {
     }
 }
 
+// MARK: - UIViewController UI And Settings Configuration Methods
 extension SearchDetailViewController: UIViewControllerConfigurationProtocol {
     func configureNavigationBar() {
         navigationItem.title = productTitle
@@ -79,6 +83,4 @@ extension SearchDetailViewController: UIViewControllerConfigurationProtocol {
     func configureUserEvents() {
         
     }
-    
-    
 }

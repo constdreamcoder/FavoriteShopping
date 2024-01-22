@@ -9,6 +9,7 @@ import Foundation
 import Alamofire
 
 class ShoppingManager {
+    
     static let shared = ShoppingManager()
     
     private init() {}
@@ -19,7 +20,7 @@ class ShoppingManager {
         start: Int = 1,
         display: Int = 30,
         completionHandler: @escaping (SearchResultsModel) -> Void
-    ) {        
+    ) {
         if let query = keyword.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
             let urlString = "https://openapi.naver.com/v1/search/shop.json?query=\(query)&display=\(display)&sort=\(sortingStandard.rawValue)&start=\(start)"
             
@@ -40,7 +41,5 @@ class ShoppingManager {
                     }
                 }
         }
-        
-        
     }
 }

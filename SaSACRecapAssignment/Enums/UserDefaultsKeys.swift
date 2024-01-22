@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum UserDefaultsKeys: String {
+enum UserDefaultsKeys: String, CaseIterable {
     case nickname = "Nickname"
     case userLoginState = "UserLoginState"
     case heartPressedList = "HeartPressedList"

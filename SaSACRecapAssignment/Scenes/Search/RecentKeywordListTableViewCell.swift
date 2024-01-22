@@ -7,12 +7,14 @@
 
 import UIKit
 
-class RecentKeywordListTableViewCell: UITableViewCell {
+final class RecentKeywordListTableViewCell: UITableViewCell {
 
+    // MARK: - Properties
     @IBOutlet weak var magnifyingGlassImageView: UIImageView!
     @IBOutlet weak var keywordLabel: UILabel!
     @IBOutlet weak var removeKeywordButton: UIButton!
     
+    // MARK: - Life Cycle Methods
     override func awakeFromNib() {
         super.awakeFromNib()
         

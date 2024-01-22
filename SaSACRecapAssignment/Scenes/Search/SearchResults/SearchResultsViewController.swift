@@ -8,8 +8,9 @@
 import UIKit
 import Kingfisher
 
-class SearchResultsViewController: UIViewController {
+final class SearchResultsViewController: UIViewController {
     
+    // MARK: - Properties
     @IBOutlet weak var resultCountLabel: UILabel!
     
     @IBOutlet weak var byAccuracyButton: UIButton!
@@ -20,13 +21,14 @@ class SearchResultsViewController: UIViewController {
     @IBOutlet weak var resultListCollectionView: UICollectionView!
     
     var keyword: String = ""
-    var searchResultList: [Item] = []
     var totalNumberSearched: Int = 0
+    var searchResultList: [Item] = []
 
     private var sortingStandard: SortingStandard = .byAccuracy
     private let display = 30
     private var start: Int = 1
     
+    // MARK: - Life Cycle Methods
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -41,9 +43,49 @@ class SearchResultsViewController: UIViewController {
         configureNavigationBar()
         resultListCollectionView.reloadData()
     }
+    
+    // MARK: - Custom Methods
+    private func designBasicSortingButton(_ sortingButton: UIButton, title: String) {
+        sortingButton.setTitle(title, for: .normal)
+        sortingButton.titleLabel?.font = .systemFont(ofSize: 15.0)
+        sortingButton.contentEdgeInsets = .init(top: 0, left: 6, bottom: 0, right: 6)
+    }
+    
+    private func configureSelectedSortingButton(_ sortingButton: UIButton) {
+        sortingButton.layer.cornerRadius = 8
+        sortingButton.layer.borderColor = UIColor.white.cgColor
+        sortingButton.layer.borderWidth = 1
+        sortingButton.setTitleColor(.black, for: .normal)
+        sortingButton.backgroundColor = .white
+    }
+    
+    private func configureDeselectedSortingButton(_ sortingButton: UIButton) {
+        sortingButton.layer.cornerRadius = 8
+        sortingButton.layer.borderColor = UIColor.white.cgColor
+        sortingButton.layer.borderWidth = 1
+        sortingButton.setTitleColor(Colors.textColor, for: .normal)
+        sortingButton.backgroundColor = Colors.backgroundColor
+    }
+    
+    private func getShoppingResultsBySortingStandard(sortingStandard: SortingStandard) {
+        self.sortingStandard = sortingStandard
+        
+        ShoppingManager.shared.fetchShoppingResults(
+            keyword: keyword,
+            sortingStandard: sortingStandard
+        ) { searchResults in
+            self.start = 1
+            self.searchResultList = searchResults.items
+            self.resultListCollectionView.reloadData()
+            
+            self.resultListCollectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .top, animated: true)
+        }
+    }
 }
 
+// MARK: - User Evernt Methods
 extension SearchResultsViewController {
+    
     @objc func sortProducts(_ sender: UIButton) {
         print("\(sender.title(for: .normal)!)")
     
@@ -54,77 +96,27 @@ extension SearchResultsViewController {
             byLowestPriceButton
         ].forEach { sortingButton in
             if sortingButton == sender {
-                sortingButton.layer.cornerRadius = 8
-                sortingButton.layer.borderColor = UIColor.white.cgColor
-                sortingButton.layer.borderWidth = 1
-                sortingButton.setTitleColor(.black, for: .normal)
-                sortingButton.backgroundColor = .white
+                configureSelectedSortingButton(sortingButton)
             } else {
-                sortingButton.layer.cornerRadius = 8
-                sortingButton.layer.borderColor = Colors.textColor.cgColor
-                sortingButton.layer.borderWidth = 1
-                sortingButton.setTitleColor(Colors.textColor, for: .normal)
-                sortingButton.backgroundColor = Colors.backgroundColor
+                configureDeselectedSortingButton(sortingButton)
             }
         }
         
         if sender == byAccuracyButton {
-            sortingStandard = .byAccuracy
-            
-            ShoppingManager.shared.fetchShoppingResults(
-                keyword: keyword,
-                sortingStandard: .byAccuracy
-            ) { searchResults in
-                self.start = 1
-                self.searchResultList = searchResults.items
-                self.resultListCollectionView.reloadData()
-                
-                self.resultListCollectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .top, animated: true)
-            }
+            getShoppingResultsBySortingStandard(sortingStandard: .byAccuracy)
         } else if sender == byDateButton {
-            sortingStandard = .byDate
-
-            ShoppingManager.shared.fetchShoppingResults(
-                keyword: keyword,
-                sortingStandard: .byDate
-            ) { searchResults in
-                self.start = 1
-                self.searchResultList = searchResults.items
-                self.resultListCollectionView.reloadData()
-                
-                self.resultListCollectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .top, animated: true)
-            }
+            getShoppingResultsBySortingStandard(sortingStandard: .byDate)
         } else if sender == byHighestPriceButton {
-            sortingStandard = .byHighestPrice
-            
-            ShoppingManager.shared.fetchShoppingResults(
-                keyword: keyword,
-                sortingStandard: .byHighestPrice
-            ) { searchResults in
-                self.start = 1
-                self.searchResultList = searchResults.items
-                self.resultListCollectionView.reloadData()
-                
-                self.resultListCollectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .top, animated: true)
-            }
+            getShoppingResultsBySortingStandard(sortingStandard: .byHighestPrice)
         } else if sender == byLowestPriceButton {
-            sortingStandard = .byLowestPrice
-            
-            ShoppingManager.shared.fetchShoppingResults(
-                keyword: keyword,
-                sortingStandard: .byLowestPrice
-            ) { searchResults in
-                self.start = 1
-                self.searchResultList = searchResults.items
-                self.resultListCollectionView.reloadData()
-                
-                self.resultListCollectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .top, animated: true)
-            }
+            getShoppingResultsBySortingStandard(sortingStandard: .byLowestPrice)
         }
     }
 }
 
+// MARK: - UIViewController UI And Settings Configuration Methods
 extension SearchResultsViewController: UIViewControllerConfigurationProtocol {
+    
     func configureNavigationBar() {
         navigationItem.title = keyword
         navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: Colors.textColor]
@@ -140,41 +132,17 @@ extension SearchResultsViewController: UIViewControllerConfigurationProtocol {
         resultCountLabel.textAlignment = .left
         resultCountLabel.font = .systemFont(ofSize: 16.0, weight: .bold)
 
-        byAccuracyButton.setTitle("정확도", for: .normal)
-        byAccuracyButton.setTitleColor(.black, for: .normal)
-        byAccuracyButton.titleLabel?.font = .systemFont(ofSize: 15.0)
-        byAccuracyButton.backgroundColor = .white
-        byAccuracyButton.layer.cornerRadius = 8
-        byAccuracyButton.layer.borderColor = UIColor.white.cgColor
-        byAccuracyButton.layer.borderWidth = 1
-        byAccuracyButton.contentEdgeInsets = .init(top: 0, left: 6, bottom: 0, right: 6)
+        designBasicSortingButton(byAccuracyButton, title: "정확도")
+        configureSelectedSortingButton(byAccuracyButton)
         
-        byDateButton.setTitle("날짜순", for: .normal)
-        byDateButton.setTitleColor(Colors.textColor, for: .normal)
-        byDateButton.titleLabel?.font = .systemFont(ofSize: 15.0)
-        byDateButton.backgroundColor = Colors.backgroundColor
-        byDateButton.layer.cornerRadius = 8
-        byDateButton.layer.borderColor = UIColor.white.cgColor
-        byDateButton.layer.borderWidth = 1
-        byDateButton.contentEdgeInsets = .init(top: 0, left: 6, bottom: 0, right: 6)
+        designBasicSortingButton(byDateButton, title: "날짜순")
+        configureDeselectedSortingButton(byDateButton)
+      
+        designBasicSortingButton(byHighestPriceButton, title: "가격높은순")
+        configureDeselectedSortingButton(byHighestPriceButton)
         
-        byHighestPriceButton.setTitle("가격높은순", for: .normal)
-        byHighestPriceButton.titleLabel?.font = .systemFont(ofSize: 15.0)
-        byHighestPriceButton.setTitleColor(Colors.textColor, for: .normal)
-        byHighestPriceButton.backgroundColor = Colors.backgroundColor
-        byHighestPriceButton.layer.cornerRadius = 8
-        byHighestPriceButton.layer.borderColor = UIColor.white.cgColor
-        byHighestPriceButton.layer.borderWidth = 1
-        byHighestPriceButton.contentEdgeInsets = .init(top: 0, left: 6, bottom: 0, right: 6)
-       
-        byLowestPriceButton.setTitle("가격낮은순", for: .normal)
-        byLowestPriceButton.titleLabel?.font = .systemFont(ofSize: 15.0)
-        byLowestPriceButton.setTitleColor(Colors.textColor, for: .normal)
-        byLowestPriceButton.backgroundColor = Colors.backgroundColor
-        byLowestPriceButton.layer.cornerRadius = 8
-        byLowestPriceButton.layer.borderColor = UIColor.white.cgColor
-        byLowestPriceButton.layer.borderWidth = 1
-        byLowestPriceButton.contentEdgeInsets = .init(top: 0, left: 6, bottom: 0, right: 6)
+        designBasicSortingButton(byLowestPriceButton, title: "가격낮은순")
+        configureDeselectedSortingButton(byLowestPriceButton)
         
         resultListCollectionView.backgroundColor = .clear
     }
@@ -191,7 +159,9 @@ extension SearchResultsViewController: UIViewControllerConfigurationProtocol {
     }
 }
 
+// MARK: - UICollectionView UI And Settings Configuration Methods
 extension SearchResultsViewController: CollectionViewConfigurationProtocol {
+    
     func configureCollectionView() {
         resultListCollectionView.delegate = self
         resultListCollectionView.dataSource = self
@@ -212,9 +182,9 @@ extension SearchResultsViewController: CollectionViewConfigurationProtocol {
         
         resultListCollectionView.collectionViewLayout = layout
     }
-    
 }
 
+// MARK: - UICollectionView Delegate Methods
 extension SearchResultsViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let searchDetailVC = storyboard?.instantiateViewController(withIdentifier: SearchDetailViewController.identifier) as! SearchDetailViewController
@@ -226,7 +196,9 @@ extension SearchResultsViewController: UICollectionViewDelegate {
     }
 }
 
+// MARK: - UICollectionView DataSource Methods
 extension SearchResultsViewController: UICollectionViewDataSource {
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return searchResultList.count
     }
@@ -251,7 +223,9 @@ extension SearchResultsViewController: UICollectionViewDataSource {
     }
 }
 
+// MARK: - UICollectionView DataSource Prefetching Methods
 extension SearchResultsViewController: UICollectionViewDataSourcePrefetching {
+    
     func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
         print("Preftech \(indexPaths)")
         for item in indexPaths {
@@ -274,5 +248,3 @@ extension SearchResultsViewController: UICollectionViewDataSourcePrefetching {
         print("Cancel Prefetch \(indexPaths)")
     }
 }
-
-

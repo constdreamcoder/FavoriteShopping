@@ -7,8 +7,9 @@
 
 import UIKit
 
-class SearchViewController: UIViewController {
+final class SearchViewController: UIViewController {
     
+    // MARK: - Properties
     @IBOutlet weak var searchBar: UISearchBar!
     
     @IBOutlet weak var tableViewHeaderView: UIView!
@@ -22,7 +23,8 @@ class SearchViewController: UIViewController {
     private let nickname = UserDefaults.standard.string(forKey: UserDefaultsKeys.nickname.rawValue) ?? ""
     
     private var recentKeywordList: [String] = UserDefaults.standard.array(forKey: UserDefaultsKeys.recentKeywordList.rawValue) as? [String] ?? []
-
+    
+    // MARK: - Life Cycle Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -34,10 +36,16 @@ class SearchViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
         configureNavigationBar()
-
+        
         recentKeywordListTableView.reloadData()
         
+        showOrHideTableHeaderViewAndRecentKeywordListTableView()
+    }
+    
+    // MARK: - Custom Methods
+    private func showOrHideTableHeaderViewAndRecentKeywordListTableView() {
         if recentKeywordList.isEmpty {
             tableViewHeaderView.isHidden = true
             recentKeywordListTableView.isHidden = true
@@ -45,11 +53,29 @@ class SearchViewController: UIViewController {
             tableViewHeaderView.isHidden = false
             recentKeywordListTableView.isHidden = false
         }
-
     }
-
 }
 
+// MARK: - User Evernt Methods
+extension SearchViewController {
+    
+    @objc func removeAllButtonTapped() {
+        recentKeywordList.removeAll()
+        UserDefaults.standard.set([], forKey: UserDefaultsKeys.recentKeywordList.rawValue)
+        recentKeywordListTableView.reloadData()
+        tableViewHeaderView.isHidden = true
+        recentKeywordListTableView.isHidden = true
+    }
+    
+    @objc func removeKeywordButtonTapped(_ sender: UIButton) {
+        recentKeywordList.remove(at: sender.tag)
+        UserDefaults.standard.set(recentKeywordList, forKey: UserDefaultsKeys.recentKeywordList.rawValue)
+        showOrHideTableHeaderViewAndRecentKeywordListTableView()
+        recentKeywordListTableView.reloadData()
+    }
+}
+
+// MARK: - UIViewController UI And Settings Configuration Methods
 extension SearchViewController: UIViewControllerConfigurationProtocol {
     
     func configureNavigationBar() {
@@ -90,34 +116,27 @@ extension SearchViewController: UIViewControllerConfigurationProtocol {
     func configureUserEvents() {
         removeAllButton.addTarget(self, action: #selector(removeAllButtonTapped), for: .touchUpInside)
     }
-    
 }
 
-extension SearchViewController {
-    @objc func removeAllButtonTapped() {
-        recentKeywordList.removeAll()
-        UserDefaults.standard.set([], forKey: UserDefaultsKeys.recentKeywordList.rawValue)
-        recentKeywordListTableView.reloadData()
-        tableViewHeaderView.isHidden = true
-        recentKeywordListTableView.isHidden = true
-    }
+// MARK: - UICollectionView UI And Settings Configuration Methods
+extension SearchViewController: TableViewConfigrationProtocol {
     
-    @objc func removeKeywordButtonTapped(_ sender: UIButton) {
-        recentKeywordList.remove(at: sender.tag)
-        UserDefaults.standard.set(recentKeywordList, forKey: UserDefaultsKeys.recentKeywordList.rawValue)
-        if recentKeywordList.isEmpty {
-            tableViewHeaderView.isHidden = true
-            recentKeywordListTableView.isHidden = true
-        } else {
-            tableViewHeaderView.isHidden = false
-            recentKeywordListTableView.isHidden = false
-        }
-        recentKeywordListTableView.reloadData()
+    func configureTableView() {
+        recentKeywordListTableView.delegate = self
+        recentKeywordListTableView.dataSource = self
         
+        let recentKeywordListTableViewCellXib = UINib(nibName: RecentKeywordListTableViewCell.identifier, bundle: nil)
+        recentKeywordListTableView.register(recentKeywordListTableViewCellXib, forCellReuseIdentifier: RecentKeywordListTableViewCell.identifier)
+        
+        recentKeywordListTableView.rowHeight = 60
+        recentKeywordListTableView.separatorStyle = .none
     }
 }
 
+
+// MARK: - UISearchBar Delegate Methods
 extension SearchViewController: UISearchBarDelegate {
+    
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         if searchBar.text != "" {
             ShoppingManager.shared.fetchShoppingResults(keyword: searchBar.text!) { searchResults in
@@ -132,49 +151,12 @@ extension SearchViewController: UISearchBarDelegate {
                 
                 self.navigationController?.pushViewController(searchResultsVC, animated: true)
             }
-            
         }
-
     }
 }
 
-
-extension SearchViewController: TableViewConfigrationProtocol {
-    func configureTableView() {
-        
-        recentKeywordListTableView.delegate = self
-        recentKeywordListTableView.dataSource = self
-        
-        let recentKeywordListTableViewCellXib = UINib(nibName: RecentKeywordListTableViewCell.identifier, bundle: nil)
-        recentKeywordListTableView.register(recentKeywordListTableViewCellXib, forCellReuseIdentifier: RecentKeywordListTableViewCell.identifier)
-        
-        recentKeywordListTableView.rowHeight = 60
-        recentKeywordListTableView.separatorStyle = .none
-    }
-}
-
+// MARK: - UITableView Delegate Methods
 extension SearchViewController: UITableViewDelegate {
-    
-}
-
-extension SearchViewController: UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return recentKeywordList.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: RecentKeywordListTableViewCell.identifier, for: indexPath) as! RecentKeywordListTableViewCell
-        
-        let recentKeyword = recentKeywordList[indexPath.row]
-        cell.keywordLabel.text = recentKeyword
-        
-        cell.removeKeywordButton.tag = indexPath.row
-        
-        cell.removeKeywordButton.addTarget(self, action: #selector(removeKeywordButtonTapped), for: .touchUpInside)
-        
-        return cell
-    }
-    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let recentKeyword = recentKeywordList[indexPath.row]
         searchBar.text = recentKeyword
@@ -191,5 +173,26 @@ extension SearchViewController: UITableViewDataSource {
             
             self.navigationController?.pushViewController(searchResultsVC, animated: true)
         }
+    }
+}
+
+// MARK: - UITableView DataSource Methods
+extension SearchViewController: UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return recentKeywordList.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: RecentKeywordListTableViewCell.identifier, for: indexPath) as! RecentKeywordListTableViewCell
+        
+        let recentKeyword = recentKeywordList[indexPath.row]
+        cell.keywordLabel.text = recentKeyword
+        
+        cell.removeKeywordButton.tag = indexPath.row
+        
+        cell.removeKeywordButton.addTarget(self, action: #selector(removeKeywordButtonTapped), for: .touchUpInside)
+        
+        return cell
     }
 }

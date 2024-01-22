@@ -7,8 +7,9 @@
 
 import UIKit
 
-class ProfileSettingsViewController: UIViewController {
+final class ProfileSettingsViewController: UIViewController {
 
+    // MARK: - Properties
     @IBOutlet weak var profileButton: UIButton!
     @IBOutlet weak var cameraImageView: UIImageView!
     
@@ -18,13 +19,13 @@ class ProfileSettingsViewController: UIViewController {
     @IBOutlet weak var completitonButton: UIButton!
     
     private let referenceProfileImageNameList: [String] = ProfileImages.allCases.map { $0.rawValue }
-    
     private lazy var randomProfileImageName = referenceProfileImageNameList.randomElement()!
     
     var editMode: Bool = false
     var currentUserProfileImageName: String = ""
     var currentUserNickname: String = ""
     
+    // MARK: - Life Cycle Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -54,12 +55,30 @@ class ProfileSettingsViewController: UIViewController {
             nicknameTextField.text = nil
         }
     }
-
+    
+    // MARK: - Custom Methods
+    private func checkNicknameLimitation(text: String) {
+        if text.count < 2 || text.count >= 10 {
+            errorMessageLabel.text = "2글자 이상 10글자 미만으로 설정해주세요"
+            errorMessageLabel.textColor = .red
+        } else if text.contains("@") || text.contains("#")
+                    || text.contains("$") || text.contains("%") {
+            errorMessageLabel.text = "닉네임에 @, #, $, %는 포함할 수 없어요"
+            errorMessageLabel.textColor = .red
+        } else if text.filter({ $0.isNumber }).count >= 1 {
+            errorMessageLabel.text = "닉네임에 숫자는 포함할 수 없어요"
+            errorMessageLabel.textColor = .red
+        } else {
+            errorMessageLabel.text = "사용할 수 있는 닉네임이에요"
+            errorMessageLabel.textColor = Colors.pointColor
+        }
+    }
 }
 
 // MARK: - User Evernt Methods
 extension ProfileSettingsViewController {
-    @objc func profileButtonTapped() {
+    
+    @objc private func profileButtonTapped() {
         let profileSelectionVC = storyboard?.instantiateViewController(withIdentifier: ProfileSelectionViewController.identifier) as! ProfileSelectionViewController
         
         profileSelectionVC.selectedProfileName = UserDefaults.standard.string(forKey: UserDefaultsKeys.selectedProfileImageName.rawValue) ?? randomProfileImageName
@@ -70,7 +89,7 @@ extension ProfileSettingsViewController {
         navigationController?.pushViewController(profileSelectionVC, animated: true)
     }
     
-    @objc func completeProfileSetting() {
+    @objc private func completeProfileSetting() {
        
         checkNicknameLimitation(text: nicknameTextField.text!)
 
@@ -102,7 +121,7 @@ extension ProfileSettingsViewController {
     }
 }
 
-// MARK: - UI Methods
+// MARK: - UIViewController UI And Settings Configuration Methods
 extension ProfileSettingsViewController: UIViewControllerConfigurationProtocol {
    
     func configureNavigationBar() {
@@ -129,7 +148,6 @@ extension ProfileSettingsViewController: UIViewControllerConfigurationProtocol {
         nicknameTextField.textColor = Colors.textColor
         nicknameTextField.textAlignment = .left
         nicknameTextField.borderStyle = .none
-        
         let nickname = editMode ? currentUserNickname : UserDefaults.standard.string(forKey: UserDefaultsKeys.nickname.rawValue) ?? ""
         nicknameTextField.text = nickname
         
@@ -154,25 +172,10 @@ extension ProfileSettingsViewController: UIViewControllerConfigurationProtocol {
     }
 }
 
+// MARK: - UITextField Delegate Methods
 extension ProfileSettingsViewController: UITextFieldDelegate {
+    
     func textFieldDidChangeSelection(_ textField: UITextField) {
         checkNicknameLimitation(text: textField.text!)
-    }
-    
-    private func checkNicknameLimitation(text: String) {
-        if text.count < 2 || text.count >= 10 {
-            errorMessageLabel.text = "2글자 이상 10글자 미만으로 설정해주세요"
-            errorMessageLabel.textColor = .red
-        } else if text.contains("@") || text.contains("#")
-                    || text.contains("$") || text.contains("%") {
-            errorMessageLabel.text = "닉네임에 @, #, $, %는 포함할 수 없어요"
-            errorMessageLabel.textColor = .red
-        } else if text.filter({ $0.isNumber }).count >= 1 {
-            errorMessageLabel.text = "닉네임에 숫자는 포함할 수 없어요"
-            errorMessageLabel.textColor = .red
-        } else {
-            errorMessageLabel.text = "사용할 수 있는 닉네임이에요"
-            errorMessageLabel.textColor = Colors.pointColor
-        }
     }
 }

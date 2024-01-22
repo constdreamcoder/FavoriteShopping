@@ -7,8 +7,9 @@
 
 import UIKit
 
-class ResultListCollectionViewCell: UICollectionViewCell {
+final class ResultListCollectionViewCell: UICollectionViewCell {
 
+    // MARK: - Properties
     @IBOutlet weak var thumbnailImageView: UIImageView!
     @IBOutlet weak var heartButton: UIButton!
     
@@ -19,6 +20,7 @@ class ResultListCollectionViewCell: UICollectionViewCell {
     var productId: String = ""
     var isHeartPressed: Bool = false
     
+    // MARK: - Life cycle Methods
     override func awakeFromNib() {
         super.awakeFromNib()
         
@@ -49,6 +51,7 @@ class ResultListCollectionViewCell: UICollectionViewCell {
         initializeHeartButtonImage()
     }
     
+    // MARK: - Custom Methods
     private func initializeHeartButtonImage() {
         guard let heartPressedList = UserDefaults.standard.dictionary(forKey: UserDefaultsKeys.heartPressedList.rawValue) else { return }
         isHeartPressed = heartPressedList[productId] as? Bool ?? false
@@ -69,7 +72,10 @@ class ResultListCollectionViewCell: UICollectionViewCell {
             heartButton.setImage(UIImage(systemName: "heart"), for: .normal)
         }
     }
-    
+}
+
+// MARK: - User Events Methods
+extension ResultListCollectionViewCell {
     @objc func heartButtonTapped(_ sender: UIButton) {
         guard var heartPressedList = UserDefaults.standard.dictionary(forKey: UserDefaultsKeys.heartPressedList.rawValue) else {
             return }

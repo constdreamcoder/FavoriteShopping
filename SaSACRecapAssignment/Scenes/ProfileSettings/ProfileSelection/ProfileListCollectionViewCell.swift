@@ -7,10 +7,12 @@
 
 import UIKit
 
-class ProfileListCollectionViewCell: UICollectionViewCell {
+final class ProfileListCollectionViewCell: UICollectionViewCell {
     
+    // MARK: - Properties
     @IBOutlet weak var referenceProfileImageView: UIImageView!
     
+    // MARK: - Life Cycle Methods
     override func awakeFromNib() {
         super.awakeFromNib()
         
@@ -23,6 +25,7 @@ class ProfileListCollectionViewCell: UICollectionViewCell {
         }
     }
     
+    // MARK: - Custom Medthods
     func selected() {
         referenceProfileImageView.layer.borderColor = Colors.pointColor.cgColor
         referenceProfileImageView.layer.borderWidth = 5
@@ -32,5 +35,4 @@ class ProfileListCollectionViewCell: UICollectionViewCell {
         referenceProfileImageView.layer.borderColor = UIColor.clear.cgColor
         referenceProfileImageView.layer.borderWidth = 0
     }
-
 }

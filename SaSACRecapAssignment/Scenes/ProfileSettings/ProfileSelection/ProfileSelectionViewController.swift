@@ -7,14 +7,16 @@
 
 import UIKit
 
-class ProfileSelectionViewController: UIViewController {
+final class ProfileSelectionViewController: UIViewController {
     
+    // MARK: - Properties
     @IBOutlet weak var selectedProfileImageView: UIImageView!
     @IBOutlet weak var profileListCollectionView: UICollectionView!
     
     var selectedProfileName: String = ""
     var referenceProfileNameList: [String] = []
     
+    // MARK: - Life Cycle Methods
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -22,9 +24,9 @@ class ProfileSelectionViewController: UIViewController {
         configureUI()
         configureCollectionView()
     }
-    
 }
 
+// MARK: - UIViewController UI And Settings Configuration Methods
 extension ProfileSelectionViewController: UIViewControllerConfigurationProtocol {
     
     func configureNavigationBar() {
@@ -55,7 +57,9 @@ extension ProfileSelectionViewController: UIViewControllerConfigurationProtocol 
     }
 }
 
+// MARK: - UICollectionView UI And Settings Configuration Methods
 extension ProfileSelectionViewController: CollectionViewConfigurationProtocol {
+    
     func configureCollectionView() {
         profileListCollectionView.delegate = self
         profileListCollectionView.dataSource = self
@@ -76,7 +80,9 @@ extension ProfileSelectionViewController: CollectionViewConfigurationProtocol {
     }
 }
 
+// MARK: - UIColletionView DataSource Methods
 extension ProfileSelectionViewController: UICollectionViewDataSource {
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return referenceProfileNameList.count
     }
@@ -98,7 +104,9 @@ extension ProfileSelectionViewController: UICollectionViewDataSource {
     }
 }
 
+// MARK: - UIColletionView Delegate Methods
 extension ProfileSelectionViewController: UICollectionViewDelegate {
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         selectedProfileImageView.image = UIImage(named: referenceProfileNameList[indexPath.item])
         selectedProfileName = referenceProfileNameList[indexPath.item]

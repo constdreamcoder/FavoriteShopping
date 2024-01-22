@@ -7,12 +7,14 @@
 
 import UIKit
 
-class OnboardingViewController: UIViewController {
+final class OnboardingViewController: UIViewController {
 
+    // MARK: - Properties
     @IBOutlet weak var appLogoImageView: UIImageView!
     @IBOutlet weak var onboardingImageView: UIImageView!
     @IBOutlet weak var startButton: UIButton!
     
+    // MARK: - Life Cycle Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -24,7 +26,8 @@ class OnboardingViewController: UIViewController {
 
 // MARK: - User Evernt Methods
 extension OnboardingViewController {
-    @objc func startButtonTapped() {
+    
+    @objc private func startButtonTapped() {
         let profileSettginsVC = storyboard?.instantiateViewController(withIdentifier: ProfileSettingsViewController.identifier) as! ProfileSettingsViewController
         
         profileSettginsVC.editMode = false
@@ -33,9 +36,9 @@ extension OnboardingViewController {
     }
 }
 
-// MARK: - UI Methods
+// MARK: - UIViewController UI And Settings Configuration Methods
 extension OnboardingViewController: UIViewControllerConfigurationProtocol {
-    // TODO: - 나중에 필요없을 시 삭제
+    
     func configureNavigationBar() {
     
     }
@@ -62,5 +65,4 @@ extension OnboardingViewController: UIViewControllerConfigurationProtocol {
     func configureUserEvents() {
         startButton.addTarget(self, action: #selector(startButtonTapped), for: .touchUpInside)
     }
-
 }
