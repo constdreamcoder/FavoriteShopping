@@ -8,7 +8,7 @@
 import Foundation
 import Alamofire
 
-class ShoppingManager {
+final class ShoppingManager {
     
     static let shared = ShoppingManager()
     

@@ -115,10 +115,7 @@ extension SettingsViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.row == settingsList.count - 1 {
-            let alert = UIAlertController(title: "처음부터 시작하기", message: "데이터를 모두 초기화 하시겠습니까?", preferredStyle: .alert)
-            
-            let confirmButton = UIAlertAction(title: "확인", style: .default) { _ in
-                
+            createAnAlert(title: "처음부터 시작하기", message: "데이터를 모두 초기화 하시겠습니까?") {
                 UserDefaultsKeys.allCases.forEach { userDefaultsKey in
                     if userDefaultsKey == UserDefaultsKeys.userLoginState {
                         UserDefaults.standard.set(false, forKey: userDefaultsKey.rawValue)
@@ -136,12 +133,6 @@ extension SettingsViewController: UITableViewDelegate {
                 sceneDelegate?.window?.rootViewController = nav
                 sceneDelegate?.window?.makeKeyAndVisible()
             }
-            let cancelButton = UIAlertAction(title: "취소", style: .cancel)
-            
-            alert.addAction(confirmButton)
-            alert.addAction(cancelButton)
-            
-            present(alert, animated: true)
         }
     }
 }
