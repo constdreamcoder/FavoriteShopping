@@ -6,19 +6,24 @@
 //
 
 import UIKit
+import SnapKit
 
 final class SearchViewController: UIViewController {
     
     // MARK: - Properties
-    @IBOutlet weak var searchBar: UISearchBar!
+    let searchBar = UISearchBar()
+    let searchBarPlaceholderString = "브랜드, 상품, 프로필, 태그 등"
     
-    @IBOutlet weak var tableViewHeaderView: UIView!
-    @IBOutlet weak var recentSearchLabel: UILabel!
-    @IBOutlet weak var removeAllButton: UIButton!
+    let tableViewHeaderView = UIView()
+    let recentSearchLabel = UILabel()
+    let removeAllButton = UIButton()
     
-    @IBOutlet weak var emptyImageView: UIImageView!
-    @IBOutlet weak var noKeywordsMessageLabel: UILabel!
-    @IBOutlet weak var recentKeywordListTableView: UITableView!
+    let emptyImageView = UIImageView()
+    let noKeywordsMessageLabel = UILabel()
+    
+    lazy var noKeywordsContainerStackView = UIStackView(arrangedSubviews: [emptyImageView, noKeywordsMessageLabel])
+    
+    let recentKeywordListTableView = UITableView()
     
     private let nickname = UserDefaults.standard.string(forKey: UserDefaultsKeys.nickname.rawValue) ?? ""
     
@@ -30,6 +35,7 @@ final class SearchViewController: UIViewController {
         
         configureUI()
         configureUserEvents()
+        configureConstraints()
         configureOthers()
         configureTableView()
     }
@@ -86,9 +92,14 @@ extension SearchViewController: UIViewControllerConfigurationProtocol {
     func configureUI() {
         view.backgroundColor = Colors.backgroundColor
         
-        searchBar.placeholder = "브랜드, 상품, 프로필, 태그 등"
+        searchBar.placeholder = searchBarPlaceholderString
         searchBar.searchBarStyle = .minimal
-        searchBar.barStyle = .black
+        searchBar.backgroundColor = .black
+        searchBar.searchTextField.backgroundColor = .darkGray
+        searchBar.tintColor = .white
+        searchBar.searchTextField.textColor = .white
+        searchBar.searchTextField.leftView?.tintColor = .lightGray
+        searchBar.searchTextField.attributedPlaceholder = NSAttributedString(string: searchBarPlaceholderString, attributes: [NSAttributedString.Key.foregroundColor : UIColor.lightGray])
         
         recentSearchLabel.text = "최근 검색"
         recentSearchLabel.font = .systemFont(ofSize: 16.0, weight: .bold)
@@ -97,6 +108,10 @@ extension SearchViewController: UIViewControllerConfigurationProtocol {
         removeAllButton.setTitle("모두 지우기", for: .normal)
         removeAllButton.setTitleColor(Colors.pointColor, for: .normal)
         removeAllButton.titleLabel?.font = .systemFont(ofSize: 16.0, weight: .bold)
+        
+        noKeywordsContainerStackView.axis = .vertical
+        noKeywordsContainerStackView.spacing = 30
+        noKeywordsContainerStackView.alignment = .center
         
         emptyImageView.image = UIImage(named: Images.empty)
         emptyImageView.contentMode = .scaleAspectFit
@@ -107,6 +122,51 @@ extension SearchViewController: UIViewControllerConfigurationProtocol {
         noKeywordsMessageLabel.font = .systemFont(ofSize: 18.0, weight: .bold)
         
         recentKeywordListTableView.backgroundColor = Colors.backgroundColor
+    }
+    
+    func configureConstraints() {
+        [
+            recentSearchLabel,
+            removeAllButton
+        ].forEach { tableViewHeaderView.addSubview($0) }
+        
+        [
+            searchBar,
+            tableViewHeaderView,
+            noKeywordsContainerStackView,
+            recentKeywordListTableView
+        ].forEach { view.addSubview($0) }
+        
+        searchBar.snp.makeConstraints {
+            $0.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+            $0.horizontalEdges.equalTo(view.safeAreaLayoutGuide.snp.horizontalEdges)
+        }
+        
+        tableViewHeaderView.snp.makeConstraints {
+            $0.top.equalTo(searchBar.snp.bottom)
+            $0.horizontalEdges.equalTo(view.safeAreaLayoutGuide.snp.horizontalEdges)
+            $0.height.equalTo(50.0)
+        }
+        
+        recentSearchLabel.snp.makeConstraints {
+            $0.centerY.equalToSuperview()
+            $0.leading.equalToSuperview().inset(8.0)
+        }
+        
+        removeAllButton.snp.makeConstraints {
+            $0.centerY.equalToSuperview()
+            $0.trailing.equalToSuperview().inset(16.0)
+        }
+        
+        noKeywordsContainerStackView.snp.makeConstraints {
+            $0.center.equalToSuperview()
+        }
+        
+        recentKeywordListTableView.snp.makeConstraints {
+            $0.top.equalTo(tableViewHeaderView.snp.bottom)
+            $0.horizontalEdges.equalTo(view.safeAreaLayoutGuide.snp.horizontalEdges)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+        }
     }
     
     func configureOthers() {
@@ -125,8 +185,7 @@ extension SearchViewController: TableViewConfigrationProtocol {
         recentKeywordListTableView.delegate = self
         recentKeywordListTableView.dataSource = self
         
-        let recentKeywordListTableViewCellXib = UINib(nibName: RecentKeywordListTableViewCell.identifier, bundle: nil)
-        recentKeywordListTableView.register(recentKeywordListTableViewCellXib, forCellReuseIdentifier: RecentKeywordListTableViewCell.identifier)
+        recentKeywordListTableView.register(RecentKeywordListTableViewCell.self, forCellReuseIdentifier: RecentKeywordListTableViewCell.identifier)
         
         recentKeywordListTableView.rowHeight = 60
         recentKeywordListTableView.separatorStyle = .none

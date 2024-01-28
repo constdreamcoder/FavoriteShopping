@@ -116,6 +116,10 @@ extension SearchResultsViewController {
 
 // MARK: - UIViewController UI And Settings Configuration Methods
 extension SearchResultsViewController: UIViewControllerConfigurationProtocol {
+    func configureConstraints() {
+        
+    }
+    
     
     func configureNavigationBar() {
         navigationItem.title = keyword

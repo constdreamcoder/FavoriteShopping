@@ -49,6 +49,10 @@ extension SearchDetailViewController {
 
 // MARK: - UIViewController UI And Settings Configuration Methods
 extension SearchDetailViewController: UIViewControllerConfigurationProtocol {
+    func configureConstraints() {
+        
+    }
+    
     func configureNavigationBar() {
         navigationItem.title = productTitle
         navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: Colors.textColor]

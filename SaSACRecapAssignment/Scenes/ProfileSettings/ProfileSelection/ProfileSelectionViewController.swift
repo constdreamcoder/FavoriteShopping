@@ -28,6 +28,10 @@ final class ProfileSelectionViewController: UIViewController {
 
 // MARK: - UIViewController UI And Settings Configuration Methods
 extension ProfileSelectionViewController: UIViewControllerConfigurationProtocol {
+    func configureConstraints() {
+        
+    }
+    
     
     func configureNavigationBar() {
         navigationItem.title = "프로필 설정"

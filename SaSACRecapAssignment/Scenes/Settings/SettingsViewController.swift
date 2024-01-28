@@ -66,6 +66,9 @@ extension SettingsViewController {
 
 // MARK: - UIViewController UI And Settings Configuration Methods
 extension SettingsViewController: UIViewControllerConfigurationProtocol {
+    func configureConstraints() {
+        
+    }
     
     func configureNavigationBar() {
         navigationItem.title = "설정"

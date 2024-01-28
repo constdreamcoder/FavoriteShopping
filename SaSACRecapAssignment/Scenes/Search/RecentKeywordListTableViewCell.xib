@@ -55,11 +55,6 @@
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-            <connections>
-                <outlet property="keywordLabel" destination="Etx-M0-Hbl" id="wRB-sv-3sO"/>
-                <outlet property="magnifyingGlassImageView" destination="Ihe-d4-05p" id="8UV-dl-MBw"/>
-                <outlet property="removeKeywordButton" destination="gWF-qE-WQW" id="5pS-VD-FDL"/>
-            </connections>
             <point key="canvasLocation" x="353.43511450381681" y="45.422535211267608"/>
         </tableViewCell>
     </objects>

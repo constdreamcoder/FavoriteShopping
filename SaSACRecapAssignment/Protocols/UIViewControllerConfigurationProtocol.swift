@@ -10,6 +10,7 @@ import UIKit
 protocol UIViewControllerConfigurationProtocol {
     func configureNavigationBar()
     func configureUI()
+    func configureConstraints()
     func configureOthers()
     func configureUserEvents()
 }

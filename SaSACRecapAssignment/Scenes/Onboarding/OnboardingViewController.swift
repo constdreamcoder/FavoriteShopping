@@ -38,6 +38,10 @@ extension OnboardingViewController {
 
 // MARK: - UIViewController UI And Settings Configuration Methods
 extension OnboardingViewController: UIViewControllerConfigurationProtocol {
+    func configureConstraints() {
+        
+    }
+    
     
     func configureNavigationBar() {
     
