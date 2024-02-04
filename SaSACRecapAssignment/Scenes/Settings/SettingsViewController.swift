@@ -6,26 +6,55 @@
 //
 
 import UIKit
+import SnapKit
 
 class SettingsViewController: UIViewController {
 
     // MARK: - Properties
-    @IBOutlet weak var userProfileContainerView: UIView!
-    @IBOutlet weak var profileImageView: UIImageView!
-    @IBOutlet weak var nicknameLabel: UILabel!
-    @IBOutlet weak var heartCountLabel: UILabel!
+    lazy var userProfileContainerView: UIView = {
+        let view = UIView()
+        [
+            profileImageView,
+            userInfoStackView
+        ].forEach { view.addSubview($0) }
+        return view
+    }()
     
-    @IBOutlet weak var settingsTableView: UITableView!
+    let profileImageView = UIImageView()
+    
+    lazy var userInfoStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 4
+        stackView.alignment = .leading
+        stackView.distribution = .fill
+        [
+            nicknameLabel,
+            heartCountLabel
+        ].forEach { stackView.addArrangedSubview($0) }
+        return stackView
+    }()
+    
+    let nicknameLabel = UILabel()
+    let heartCountLabel = UILabel()
+    
+    let separatorView = UIView()
+    
+    let settingsTableView = UITableView()
             
     private let settingsList = ["공지사항", "자주 묻는 질문", "1:1 문의", "알림 설정", "처음부터 시작하기"]
+    
+    private let profileImageViewWidth: CGFloat = 50.0
     
     // MARK: - Life Cycle Methods
     override func viewDidLoad() {
         super.viewDidLoad()
 
         configureNavigationBar()
+        configureConstraints()
         configureUI()
         configureOthers()
+        configureUserEvents()
         configureTableView()
     }
     
@@ -53,7 +82,7 @@ class SettingsViewController: UIViewController {
 // MARK: - User Events Methods
 extension SettingsViewController {
     
-    @IBAction func userProfileContainerViewTapped(_ sender: UITapGestureRecognizer) {
+    @objc func userProfileContainerViewTapped(_ sender: UITapGestureRecognizer) {
         let profileSettingsVC = storyboard?.instantiateViewController(withIdentifier: ProfileSettingsViewController.identifier) as! ProfileSettingsViewController
         
         profileSettingsVC.editMode = true
@@ -66,13 +95,56 @@ extension SettingsViewController {
 
 // MARK: - UIViewController UI And Settings Configuration Methods
 extension SettingsViewController: UIViewControllerConfigurationProtocol {
-    func configureConstraints() {
-        
-    }
     
     func configureNavigationBar() {
         navigationItem.title = "설정"
         navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: Colors.textColor]
+    }
+    
+    func configureConstraints() {
+        [
+            userProfileContainerView,
+            separatorView,
+            settingsTableView
+        ].forEach { view.addSubview($0) }
+        
+        userProfileContainerView.snp.makeConstraints {
+            $0.top.equalTo(view.safeAreaLayoutGuide)
+            $0.horizontalEdges.equalTo(view.safeAreaLayoutGuide).inset(16.0)
+            $0.height.equalTo(70.0)
+        }
+        
+        profileImageView.snp.makeConstraints {
+            $0.leading.equalToSuperview().inset(16.0)
+            $0.centerY.equalToSuperview()
+            $0.width.height.equalTo(profileImageViewWidth)
+        }
+        
+        userInfoStackView.snp.makeConstraints {
+            $0.centerY.equalToSuperview()
+            $0.leading.equalTo(profileImageView.snp.trailing).offset(24.0)
+            $0.trailing.equalToSuperview().inset(16.0)
+        }
+        
+        nicknameLabel.snp.makeConstraints {
+            $0.width.equalToSuperview()
+        }
+        
+        heartCountLabel.snp.makeConstraints {
+            $0.width.equalToSuperview()
+        }
+        
+        separatorView.snp.makeConstraints {
+            $0.top.equalTo(userProfileContainerView.snp.bottom)
+            $0.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
+            $0.height.equalTo(16.0)
+        }
+        
+        settingsTableView.snp.makeConstraints {
+            $0.top.equalTo(separatorView.snp.bottom)
+            $0.horizontalEdges.equalTo(userProfileContainerView)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide)
+        }
     }
     
     func configureUI() {
@@ -80,7 +152,8 @@ extension SettingsViewController: UIViewControllerConfigurationProtocol {
         userProfileContainerView.layer.cornerRadius = 8
         
         profileImageView.contentMode = .scaleAspectFit
-        profileImageView.layer.cornerRadius = profileImageView.frame.width / 2
+        profileImageView.layer.cornerRadius = profileImageViewWidth / 2
+        profileImageView.clipsToBounds = true
         profileImageView.layer.borderWidth = 4
         profileImageView.layer.borderColor = Colors.pointColor.cgColor
         
@@ -100,16 +173,18 @@ extension SettingsViewController: UIViewControllerConfigurationProtocol {
     }
     
     func configureUserEvents() {
-        
+        userProfileContainerView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(userProfileContainerViewTapped)))
     }
 }
 
 // MARK: - UITableView UI And Settings Configuration Methods
-extension SettingsViewController: TableViewConfigrationProtocol {
+extension SettingsViewController: UITableViewConfigrationProtocol {
     
     func configureTableView() {
         settingsTableView.delegate = self
         settingsTableView.dataSource = self
+        
+        settingsTableView.register(UITableViewCell.self, forCellReuseIdentifier: "SettingTableViewCell")
     }
 }
 
@@ -153,6 +228,7 @@ extension SettingsViewController: UITableViewDataSource {
         cell.selectionStyle = .none
         cell.backgroundColor = Colors.settingsElementBackgroundColor
         cell.textLabel?.textColor = Colors.textColor
+        cell.textLabel?.font = .systemFont(ofSize: 12.0)
 
         if indexPath.row == 0  {
             cell.layer.cornerRadius = 8

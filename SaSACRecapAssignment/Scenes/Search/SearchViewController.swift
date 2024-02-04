@@ -32,11 +32,11 @@ final class SearchViewController: UIViewController {
     // MARK: - Life Cycle Methods
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        configureUI()
-        configureUserEvents()
+
         configureConstraints()
+        configureUI()
         configureOthers()
+        configureUserEvents()
         configureTableView()
     }
     
@@ -89,41 +89,6 @@ extension SearchViewController: UIViewControllerConfigurationProtocol {
         navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: Colors.textColor]
     }
     
-    func configureUI() {
-        view.backgroundColor = Colors.backgroundColor
-        
-        searchBar.placeholder = searchBarPlaceholderString
-        searchBar.searchBarStyle = .minimal
-        searchBar.backgroundColor = .black
-        searchBar.searchTextField.backgroundColor = .darkGray
-        searchBar.tintColor = .white
-        searchBar.searchTextField.textColor = .white
-        searchBar.searchTextField.leftView?.tintColor = .lightGray
-        searchBar.searchTextField.attributedPlaceholder = NSAttributedString(string: searchBarPlaceholderString, attributes: [NSAttributedString.Key.foregroundColor : UIColor.lightGray])
-        
-        recentSearchLabel.text = "최근 검색"
-        recentSearchLabel.font = .systemFont(ofSize: 16.0, weight: .bold)
-        recentSearchLabel.textColor = Colors.textColor
-        
-        removeAllButton.setTitle("모두 지우기", for: .normal)
-        removeAllButton.setTitleColor(Colors.pointColor, for: .normal)
-        removeAllButton.titleLabel?.font = .systemFont(ofSize: 16.0, weight: .bold)
-        
-        noKeywordsContainerStackView.axis = .vertical
-        noKeywordsContainerStackView.spacing = 30
-        noKeywordsContainerStackView.alignment = .center
-        
-        emptyImageView.image = UIImage(named: Images.empty)
-        emptyImageView.contentMode = .scaleAspectFit
-        
-        noKeywordsMessageLabel.text = "최근 검색어가 없어요"
-        noKeywordsMessageLabel.textAlignment = .center
-        noKeywordsMessageLabel.textColor = Colors.textColor
-        noKeywordsMessageLabel.font = .systemFont(ofSize: 18.0, weight: .bold)
-        
-        recentKeywordListTableView.backgroundColor = Colors.backgroundColor
-    }
-    
     func configureConstraints() {
         [
             recentSearchLabel,
@@ -169,6 +134,41 @@ extension SearchViewController: UIViewControllerConfigurationProtocol {
         }
     }
     
+    func configureUI() {
+        view.backgroundColor = Colors.backgroundColor
+        
+        searchBar.placeholder = searchBarPlaceholderString
+        searchBar.searchBarStyle = .minimal
+        searchBar.backgroundColor = .black
+        searchBar.searchTextField.backgroundColor = .darkGray
+        searchBar.tintColor = .white
+        searchBar.searchTextField.textColor = .white
+        searchBar.searchTextField.leftView?.tintColor = .lightGray
+        searchBar.searchTextField.attributedPlaceholder = NSAttributedString(string: searchBarPlaceholderString, attributes: [NSAttributedString.Key.foregroundColor : UIColor.lightGray])
+        
+        recentSearchLabel.text = "최근 검색"
+        recentSearchLabel.font = .systemFont(ofSize: 16.0, weight: .bold)
+        recentSearchLabel.textColor = Colors.textColor
+        
+        removeAllButton.setTitle("모두 지우기", for: .normal)
+        removeAllButton.setTitleColor(Colors.pointColor, for: .normal)
+        removeAllButton.titleLabel?.font = .systemFont(ofSize: 16.0, weight: .bold)
+        
+        noKeywordsContainerStackView.axis = .vertical
+        noKeywordsContainerStackView.spacing = 30
+        noKeywordsContainerStackView.alignment = .center
+        
+        emptyImageView.image = UIImage(named: Images.empty)
+        emptyImageView.contentMode = .scaleAspectFit
+        
+        noKeywordsMessageLabel.text = "최근 검색어가 없어요"
+        noKeywordsMessageLabel.textAlignment = .center
+        noKeywordsMessageLabel.textColor = Colors.textColor
+        noKeywordsMessageLabel.font = .systemFont(ofSize: 18.0, weight: .bold)
+        
+        recentKeywordListTableView.backgroundColor = Colors.backgroundColor
+    }
+    
     func configureOthers() {
         searchBar.delegate = self
     }
@@ -178,8 +178,8 @@ extension SearchViewController: UIViewControllerConfigurationProtocol {
     }
 }
 
-// MARK: - UICollectionView UI And Settings Configuration Methods
-extension SearchViewController: TableViewConfigrationProtocol {
+// MARK: - UITableView UI And Settings Configuration Methods
+extension SearchViewController: UITableViewConfigrationProtocol {
     
     func configureTableView() {
         recentKeywordListTableView.delegate = self

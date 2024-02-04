@@ -6,17 +6,30 @@
 //
 
 import UIKit
+import SnapKit
 
 final class ProfileSettingsViewController: UIViewController {
 
     // MARK: - Properties
-    @IBOutlet weak var profileButton: UIButton!
-    @IBOutlet weak var cameraImageView: UIImageView!
+    let profileContainerView = UIView()
+    let profileButton = UIButton()
+    let cameraImageView = UIImageView()
     
-    @IBOutlet weak var nicknameTextField: UITextField!
-    @IBOutlet weak var errorMessageLabel: UILabel!
+    let nicknameTextField = UITextField()
+    let nicknameTextFieldBufferView = UIView()
+    lazy var nicknameTextFieldContainerStackView = UIStackView(arrangedSubviews: [nicknameTextFieldBufferView, nicknameTextField, nicknameTextFieldBufferView])
+    
+    let separatorView = UIView()
+    
+    let errorMessageLabel = UILabel()
+    let errorMessageLabelBufferView = UIView()
+    lazy var errorMessageLabelContainerStackView = UIStackView(arrangedSubviews: [errorMessageLabelBufferView, errorMessageLabel, errorMessageLabelBufferView])
+    
+    lazy var inputContainerStackView = UIStackView(arrangedSubviews: [nicknameTextFieldContainerStackView, separatorView, errorMessageLabelContainerStackView])
+    
+    let completitonButton = UIButton()
 
-    @IBOutlet weak var completitonButton: UIButton!
+    private let profileButtonWidth: CGFloat = 90.0
     
     private let referenceProfileImageNameList: [String] = ProfileImages.allCases.map { $0.rawValue }
     private lazy var randomProfileImageName = referenceProfileImageNameList.randomElement()!
@@ -29,6 +42,7 @@ final class ProfileSettingsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        configureConstraints()
         configureUI()
         configureOthers()
         configureUserEvents()
@@ -109,6 +123,7 @@ extension ProfileSettingsViewController {
                 
                 let mainTabBarVC = storyboard?.instantiateViewController(identifier: "MainTabBarController") as! UITabBarController
                 mainTabBarVC.tabBar.tintColor = Colors.pointColor
+                mainTabBarVC.tabBar.unselectedItemTintColor = .darkGray
 
                 sceneDelegate?.window?.rootViewController = mainTabBarVC
                 sceneDelegate?.window?.makeKeyAndVisible()
@@ -123,11 +138,7 @@ extension ProfileSettingsViewController {
 
 // MARK: - UIViewController UI And Settings Configuration Methods
 extension ProfileSettingsViewController: UIViewControllerConfigurationProtocol {
-    func configureConstraints() {
-        
-    }
     
-   
     func configureNavigationBar() {
         navigationItem.title = "프로필 설정"
         navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: Colors.textColor]
@@ -135,16 +146,86 @@ extension ProfileSettingsViewController: UIViewControllerConfigurationProtocol {
         navigationController?.navigationBar.topItem?.title = ""
     }
     
+    func configureConstraints() {
+        [
+            profileButton,
+            cameraImageView,
+        ].forEach { profileContainerView.addSubview($0) }
+        
+        [
+            profileContainerView,
+            inputContainerStackView,
+            completitonButton
+        ].forEach { view.addSubview($0) }
+        
+        profileContainerView.snp.makeConstraints {
+            $0.top.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
+            $0.height.equalTo(140.0)
+        }
+        
+        profileButton.snp.makeConstraints {
+            $0.center.equalToSuperview()
+            $0.size.equalTo(profileButtonWidth)
+        }
+        
+        cameraImageView.snp.makeConstraints {
+            $0.center.equalTo(profileButton.snp.center).offset(30.0)
+            $0.size.equalTo(25.0)
+        }
+        
+        inputContainerStackView.snp.makeConstraints {
+            $0.top.equalTo(profileContainerView.snp.bottom)
+            $0.horizontalEdges.equalToSuperview().inset(16.0)
+        }
+        
+        nicknameTextFieldContainerStackView.snp.makeConstraints {
+            $0.width.equalTo(inputContainerStackView.snp.width)
+        }
+        
+        nicknameTextField.snp.makeConstraints {
+            $0.height.equalTo(18.0)
+        }
+        
+        nicknameTextFieldBufferView.snp.makeConstraints {
+            $0.height.equalTo(nicknameTextField.snp.height)
+            $0.width.equalTo(8.0)
+        }
+        
+        separatorView.snp.makeConstraints {
+            $0.width.equalTo(inputContainerStackView.snp.width)
+            $0.height.equalTo(1.0)
+        }
+        
+        errorMessageLabelContainerStackView.snp.makeConstraints {
+            $0.width.equalTo(inputContainerStackView.snp.width)
+        }
+        
+        errorMessageLabelBufferView.snp.makeConstraints {
+            $0.height.equalTo(errorMessageLabel.snp.height)
+            $0.width.equalTo(8.0)
+        }
+        
+        completitonButton.snp.makeConstraints {
+            $0.top.equalTo(inputContainerStackView.snp.bottom).offset(16.0)
+            $0.horizontalEdges.equalToSuperview().inset(16.0)
+            $0.height.equalTo(50.0)
+        }
+    }
+    
     func configureUI() {
         view.backgroundColor = Colors.backgroundColor
-
-        profileButton.layer.cornerRadius = profileButton.frame.width / 2
+        print("width: \(profileButton.frame.width)")
+        
+        profileButton.layer.cornerRadius = profileButtonWidth / 2
         profileButton.clipsToBounds = true
         profileButton.layer.borderColor = Colors.pointColor.cgColor
         profileButton.layer.borderWidth = 5
         
         cameraImageView.image = UIImage(named: Images.camera)
         cameraImageView.contentMode = .scaleAspectFit
+        
+        inputContainerStackView.axis = .vertical
+        inputContainerStackView.spacing = 12
         
         nicknameTextField.placeholder = "닉네임을 입력해주세요 :)"
         nicknameTextField.attributedPlaceholder = NSAttributedString(string: nicknameTextField.placeholder!, attributes: [NSAttributedString.Key.foregroundColor : UIColor.darkGray])
@@ -155,15 +236,22 @@ extension ProfileSettingsViewController: UIViewControllerConfigurationProtocol {
         let nickname = editMode ? currentUserNickname : UserDefaults.standard.string(forKey: UserDefaultsKeys.nickname.rawValue) ?? ""
         nicknameTextField.text = nickname
         
+        nicknameTextFieldContainerStackView.axis = .horizontal
+        
+        separatorView.backgroundColor = .white
+        
         errorMessageLabel.textAlignment = .left
         errorMessageLabel.textColor = Colors.textColor
         errorMessageLabel.numberOfLines = 2
         errorMessageLabel.font = .systemFont(ofSize: 14.0)
         
+        errorMessageLabelContainerStackView.axis = .horizontal
+        
         completitonButton.setTitle("완료", for: .normal)
         completitonButton.setTitleColor(Colors.textColor, for: .normal)
         completitonButton.titleLabel?.font = .systemFont(ofSize: 18.0, weight: .bold)
         completitonButton.layer.cornerRadius = 8
+        completitonButton.backgroundColor = Colors.pointColor
     }
     
     func configureOthers() {

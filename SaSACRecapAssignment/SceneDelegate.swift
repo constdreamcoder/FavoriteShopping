@@ -34,6 +34,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             
             let mainTabBarVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "MainTabBarController") as! UITabBarController
             mainTabBarVC.tabBar.tintColor = Colors.pointColor
+            mainTabBarVC.tabBar.unselectedItemTintColor = .darkGray
 
             window?.rootViewController = mainTabBarVC
             window?.makeKeyAndVisible()

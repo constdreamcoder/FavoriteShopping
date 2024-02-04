@@ -6,19 +6,24 @@
 //
 
 import UIKit
+import SnapKit
 import Kingfisher
 
 final class SearchResultsViewController: UIViewController {
     
     // MARK: - Properties
-    @IBOutlet weak var resultCountLabel: UILabel!
     
-    @IBOutlet weak var byAccuracyButton: UIButton!
-    @IBOutlet weak var byDateButton: UIButton!
-    @IBOutlet weak var byHighestPriceButton: UIButton!
-    @IBOutlet weak var byLowestPriceButton: UIButton!
+    let resultCountLabel = UILabel()
     
-    @IBOutlet weak var resultListCollectionView: UICollectionView!
+    let buttonContainerView = UIView()
+    lazy var buttonContainerStackView = UIStackView(arrangedSubviews: [byAccuracyButton, byDateButton, byHighestPriceButton, byLowestPriceButton])
+    
+    let byAccuracyButton = UIButton()
+    let byDateButton = UIButton()
+    let byHighestPriceButton = UIButton()
+    let byLowestPriceButton = UIButton()
+    
+    lazy var resultListCollectionView = UICollectionView(frame: .zero, collectionViewLayout: configureCollectionViewLayout())
     
     var keyword: String = ""
     var totalNumberSearched: Int = 0
@@ -32,9 +37,10 @@ final class SearchResultsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        configureConstraints()
         configureUI()
         configureUserEvents()
-        configureCollectionView()        
+        configureCollectionView()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -116,16 +122,43 @@ extension SearchResultsViewController {
 
 // MARK: - UIViewController UI And Settings Configuration Methods
 extension SearchResultsViewController: UIViewControllerConfigurationProtocol {
-    func configureConstraints() {
-        
-    }
-    
     
     func configureNavigationBar() {
         navigationItem.title = keyword
         navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: Colors.textColor]
         navigationController?.navigationBar.tintColor = .white
         navigationController?.navigationBar.topItem?.title = ""
+    }
+    
+    func configureConstraints() {
+        buttonContainerView.addSubview(buttonContainerStackView)
+        
+        [
+            resultCountLabel,
+            buttonContainerView,
+            resultListCollectionView
+        ].forEach { view.addSubview($0) }
+        
+        resultCountLabel.snp.makeConstraints {
+            $0.top.equalTo(view.safeAreaLayoutGuide).inset(8.0)
+            $0.horizontalEdges.equalTo(view.safeAreaLayoutGuide).inset(12.0)
+        }
+        
+        buttonContainerView.snp.makeConstraints {
+            $0.top.equalTo(resultCountLabel.snp.bottom)
+            $0.horizontalEdges.equalTo(resultCountLabel)
+            $0.height.equalTo(46.0)
+        }
+        
+        buttonContainerStackView.snp.makeConstraints {
+            $0.top.bottom.equalToSuperview().inset(8.0)
+            $0.leading.equalToSuperview()
+        }
+        
+        resultListCollectionView.snp.makeConstraints {
+            $0.top.equalTo(buttonContainerView.snp.bottom)
+            $0.horizontalEdges.bottom.equalTo(view.safeAreaLayoutGuide)
+        }
     }
     
     func configureUI() {
@@ -136,6 +169,13 @@ extension SearchResultsViewController: UIViewControllerConfigurationProtocol {
         resultCountLabel.textAlignment = .left
         resultCountLabel.font = .systemFont(ofSize: 16.0, weight: .bold)
 
+        buttonContainerView.backgroundColor = .clear
+        
+        buttonContainerStackView.backgroundColor = .clear
+        buttonContainerStackView.axis = .horizontal
+        buttonContainerStackView.spacing = 8.0
+        buttonContainerStackView.distribution = .equalSpacing
+        
         designBasicSortingButton(byAccuracyButton, title: "정확도")
         configureSelectedSortingButton(byAccuracyButton)
         
@@ -164,17 +204,9 @@ extension SearchResultsViewController: UIViewControllerConfigurationProtocol {
 }
 
 // MARK: - UICollectionView UI And Settings Configuration Methods
-extension SearchResultsViewController: CollectionViewConfigurationProtocol {
+extension SearchResultsViewController: UICollectionViewConfigurationProtocol {
     
-    func configureCollectionView() {
-        resultListCollectionView.delegate = self
-        resultListCollectionView.dataSource = self
-        
-        resultListCollectionView.prefetchDataSource = self
-        
-        let resultListCollectionViewCellXib = UINib(nibName: ResultListCollectionViewCell.identifier, bundle: nil)
-        resultListCollectionView.register(resultListCollectionViewCellXib, forCellWithReuseIdentifier: ResultListCollectionViewCell.identifier)
-        
+    func configureCollectionViewLayout() -> UICollectionViewLayout {
         let spacing: CGFloat = 12
         
         let layout = UICollectionViewFlowLayout()
@@ -184,12 +216,24 @@ extension SearchResultsViewController: CollectionViewConfigurationProtocol {
         layout.minimumInteritemSpacing = spacing
         layout.sectionInset = UIEdgeInsets(top: spacing, left: spacing, bottom: spacing, right: spacing)
         
-        resultListCollectionView.collectionViewLayout = layout
+        return layout
+    }
+    
+    func configureCollectionView() {
+        resultListCollectionView.delegate = self
+        resultListCollectionView.dataSource = self
+        
+        resultListCollectionView.prefetchDataSource = self
+
+        resultListCollectionView.register(ResultListCollectionViewCell.self, forCellWithReuseIdentifier: ResultListCollectionViewCell.identifier)
+        
+        resultListCollectionView.collectionViewLayout = configureCollectionViewLayout()
     }
 }
 
 // MARK: - UICollectionView Delegate Methods
 extension SearchResultsViewController: UICollectionViewDelegate {
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let searchDetailVC = storyboard?.instantiateViewController(withIdentifier: SearchDetailViewController.identifier) as! SearchDetailViewController
         

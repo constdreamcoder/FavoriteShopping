@@ -7,11 +7,12 @@
 
 import UIKit
 import WebKit
+import SnapKit
 
 class SearchDetailViewController: UIViewController {
     
     // MARK: - Properties
-    @IBOutlet weak var webView: WKWebView!
+    let webView = WKWebView()
     
     var productTitle: String = ""
     var productId: String = ""
@@ -21,6 +22,7 @@ class SearchDetailViewController: UIViewController {
         super.viewDidLoad()
 
         configureNavigationBar()
+        configureConstraints()
         configureUI()
         configureOthers()
     }
@@ -49,9 +51,6 @@ extension SearchDetailViewController {
 
 // MARK: - UIViewController UI And Settings Configuration Methods
 extension SearchDetailViewController: UIViewControllerConfigurationProtocol {
-    func configureConstraints() {
-        
-    }
     
     func configureNavigationBar() {
         navigationItem.title = productTitle
@@ -70,6 +69,14 @@ extension SearchDetailViewController: UIViewControllerConfigurationProtocol {
         }
         let barButtonItem = UIBarButtonItem(image: UIImage(systemName: systemImageName), style: .plain, target: self, action: #selector(rightBarButtonItemTapped))
         navigationItem.rightBarButtonItem = barButtonItem
+    }
+    
+    func configureConstraints() {
+        view.addSubview(webView)
+        
+        webView.snp.makeConstraints {
+            $0.edges.equalTo(view.safeAreaLayoutGuide)
+        }
     }
     
     func configureUI() {

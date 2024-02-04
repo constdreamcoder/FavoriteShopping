@@ -6,12 +6,17 @@
 //
 
 import UIKit
+import SnapKit
 
 final class ProfileSelectionViewController: UIViewController {
     
     // MARK: - Properties
-    @IBOutlet weak var selectedProfileImageView: UIImageView!
-    @IBOutlet weak var profileListCollectionView: UICollectionView!
+    let selectedProfileImageViewContainerView = UIView()
+    let selectedProfileImageView = UIImageView()
+    
+    lazy var profileListCollectionView = UICollectionView(frame: .zero, collectionViewLayout: configureCollectionViewLayout())
+    
+    let selectedProfileImageViewWidth: CGFloat = 160.0
     
     var selectedProfileName: String = ""
     var referenceProfileNameList: [String] = []
@@ -21,6 +26,7 @@ final class ProfileSelectionViewController: UIViewController {
         super.viewDidLoad()
 
         configureNavigationBar()
+        configureConstraints()
         configureUI()
         configureCollectionView()
     }
@@ -28,11 +34,6 @@ final class ProfileSelectionViewController: UIViewController {
 
 // MARK: - UIViewController UI And Settings Configuration Methods
 extension ProfileSelectionViewController: UIViewControllerConfigurationProtocol {
-    func configureConstraints() {
-        
-    }
-    
-    
     func configureNavigationBar() {
         navigationItem.title = "프로필 설정"
         navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: Colors.textColor]
@@ -40,10 +41,35 @@ extension ProfileSelectionViewController: UIViewControllerConfigurationProtocol 
         navigationController?.navigationBar.topItem?.title = ""
     }
     
+    func configureConstraints() {
+        selectedProfileImageViewContainerView.addSubview(selectedProfileImageView)
+        
+        [
+            selectedProfileImageViewContainerView,
+            profileListCollectionView
+        ].forEach { view.addSubview($0) }
+        
+        selectedProfileImageViewContainerView.snp.makeConstraints {
+            $0.top.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
+            $0.height.equalTo(240.0)
+        }
+        
+        selectedProfileImageView.snp.makeConstraints {
+            $0.width.height.equalTo(selectedProfileImageViewWidth)
+            $0.center.equalToSuperview()
+        }
+        
+        profileListCollectionView.snp.makeConstraints {
+            $0.horizontalEdges.bottom.equalTo(view.safeAreaLayoutGuide)
+            $0.top.equalTo(selectedProfileImageViewContainerView.snp.bottom)
+        }
+    }
+    
     func configureUI() {
         view.backgroundColor = Colors.backgroundColor
 
-        selectedProfileImageView.layer.cornerRadius = selectedProfileImageView.frame.width / 2
+        selectedProfileImageView.clipsToBounds = true
+        selectedProfileImageView.layer.cornerRadius = selectedProfileImageViewWidth / 2
         selectedProfileImageView.layer.borderColor = Colors.pointColor.cgColor
         selectedProfileImageView.layer.borderWidth = 5
         selectedProfileImageView.image = UIImage(named: selectedProfileName)
@@ -62,15 +88,8 @@ extension ProfileSelectionViewController: UIViewControllerConfigurationProtocol 
 }
 
 // MARK: - UICollectionView UI And Settings Configuration Methods
-extension ProfileSelectionViewController: CollectionViewConfigurationProtocol {
-    
-    func configureCollectionView() {
-        profileListCollectionView.delegate = self
-        profileListCollectionView.dataSource = self
-        
-        let profileListCollectionViewCellXib = UINib(nibName: ProfileListCollectionViewCell.identifier, bundle: nil)
-        profileListCollectionView.register(profileListCollectionViewCellXib, forCellWithReuseIdentifier: ProfileListCollectionViewCell.identifier)
-        
+extension ProfileSelectionViewController: UICollectionViewConfigurationProtocol {
+    func configureCollectionViewLayout() -> UICollectionViewLayout {
         let spacing: CGFloat = 16
         
         let layout = UICollectionViewFlowLayout()
@@ -80,7 +99,14 @@ extension ProfileSelectionViewController: CollectionViewConfigurationProtocol {
         layout.minimumInteritemSpacing = spacing
         layout.sectionInset = UIEdgeInsets(top: spacing, left: spacing, bottom: spacing, right: spacing)
         
-        profileListCollectionView.collectionViewLayout = layout
+        return layout
+    }
+    
+    func configureCollectionView() {
+        profileListCollectionView.delegate = self
+        profileListCollectionView.dataSource = self
+        
+        profileListCollectionView.register(ProfileListCollectionViewCell.self, forCellWithReuseIdentifier: ProfileListCollectionViewCell.identifier)
     }
 }
 

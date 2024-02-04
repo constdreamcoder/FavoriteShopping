@@ -9,8 +9,8 @@ import UIKit
 
 protocol UIViewControllerConfigurationProtocol {
     func configureNavigationBar()
-    func configureUI()
     func configureConstraints()
+    func configureUI()
     func configureOthers()
     func configureUserEvents()
 }
