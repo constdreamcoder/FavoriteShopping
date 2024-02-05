@@ -198,17 +198,27 @@ extension SearchViewController: UISearchBarDelegate {
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         if searchBar.text != "" {
-            ShoppingManager.shared.fetchShoppingResults(keyword: searchBar.text!) { searchResults in
-                let searchResultsVC = self.storyboard?.instantiateViewController(withIdentifier: SearchResultsViewController.identifier) as! SearchResultsViewController
-                
-                searchResultsVC.keyword = searchBar.text!
-                searchResultsVC.searchResultList = searchResults.items
-                searchResultsVC.totalNumberSearched = searchResults.total
-                
-                self.recentKeywordList.insert(searchBar.text!, at: 0)
-                UserDefaults.standard.set(self.recentKeywordList, forKey: UserDefaultsKeys.recentKeywordList.rawValue)
-                
-                self.navigationController?.pushViewController(searchResultsVC, animated: true)
+            
+            ShoppingURLSession.shared.fetchShoppingResults(keyword: searchBar.text!) { searchResults, error in
+
+                if error == nil {
+                    let searchResultsVC = self.storyboard?.instantiateViewController(withIdentifier: SearchResultsViewController.identifier) as! SearchResultsViewController
+                    
+                    guard let searchResults = searchResults else { return }
+                    
+                    searchResultsVC.keyword = searchBar.text!
+                    searchResultsVC.searchResultList = searchResults.items
+                    searchResultsVC.totalNumberSearched = searchResults.total
+                    
+                    self.recentKeywordList.insert(searchBar.text!, at: 0)
+                    UserDefaults.standard.set(self.recentKeywordList, forKey: UserDefaultsKeys.recentKeywordList.rawValue)
+                    
+                    self.navigationController?.pushViewController(searchResultsVC, animated: true)
+                } else {
+                    // 에러 처리
+                    print(error!)
+                }
+               
             }
         }
     }
@@ -219,18 +229,25 @@ extension SearchViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let recentKeyword = recentKeywordList[indexPath.row]
         searchBar.text = recentKeyword
-        ShoppingManager.shared.fetchShoppingResults(keyword: recentKeyword) { searchResults in
+        ShoppingURLSession.shared.fetchShoppingResults(keyword: recentKeyword) { searchResults, error in
             
-            let searchResultsVC = self.storyboard?.instantiateViewController(withIdentifier: SearchResultsViewController.identifier) as! SearchResultsViewController
-            
-            searchResultsVC.keyword = recentKeyword
-            searchResultsVC.searchResultList = searchResults.items
-            searchResultsVC.totalNumberSearched = searchResults.total
-            
-            self.recentKeywordList.insert(recentKeyword, at: 0)
-            UserDefaults.standard.set(self.recentKeywordList, forKey: UserDefaultsKeys.recentKeywordList.rawValue)
-            
-            self.navigationController?.pushViewController(searchResultsVC, animated: true)
+            if error == nil {
+                let searchResultsVC = self.storyboard?.instantiateViewController(withIdentifier: SearchResultsViewController.identifier) as! SearchResultsViewController
+                
+                guard let searchResults = searchResults else { return }
+                
+                searchResultsVC.keyword = recentKeyword
+                searchResultsVC.searchResultList = searchResults.items
+                searchResultsVC.totalNumberSearched = searchResults.total
+                
+                self.recentKeywordList.insert(recentKeyword, at: 0)
+                UserDefaults.standard.set(self.recentKeywordList, forKey: UserDefaultsKeys.recentKeywordList.rawValue)
+                
+                self.navigationController?.pushViewController(searchResultsVC, animated: true)
+            } else {
+                // 에러 처리
+                print(error!)
+            }
         }
     }
 }

@@ -76,15 +76,23 @@ final class SearchResultsViewController: UIViewController {
     private func getShoppingResultsBySortingStandard(sortingStandard: SortingStandard) {
         self.sortingStandard = sortingStandard
         
-        ShoppingManager.shared.fetchShoppingResults(
+        ShoppingURLSession.shared.fetchShoppingResults(
             keyword: keyword,
             sortingStandard: sortingStandard
-        ) { searchResults in
-            self.start = 1
-            self.searchResultList = searchResults.items
-            self.resultListCollectionView.reloadData()
+        ) { searchResults, error in
             
-            self.resultListCollectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .top, animated: true)
+            if error == nil {
+                guard let searchResults = searchResults else { return }
+            
+                self.start = 1
+                self.searchResultList = searchResults.items
+                self.resultListCollectionView.reloadData()
+                
+                self.resultListCollectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .top, animated: true)
+            } else {
+                // 에러 처리
+                print(error!)
+            }
         }
     }
 }
@@ -279,15 +287,22 @@ extension SearchResultsViewController: UICollectionViewDataSourcePrefetching {
         for item in indexPaths {
             if start <= 1000 && totalNumberSearched > display + start && searchResultList.count - 4 == item.item {
                 start += display
-                ShoppingManager.shared.fetchShoppingResults(
+                ShoppingURLSession.shared.fetchShoppingResults(
                     keyword: self.keyword,
                     sortingStandard: self.sortingStandard,
                     start: self.start,
                     display: totalNumberSearched < display + start ? totalNumberSearched % display : display
-                ) { searchResults in
-                    self.searchResultList.append(contentsOf: searchResults.items)
-                    self.resultListCollectionView.reloadData()
+                ) { searchResults, error in
+                    if error == nil {
+                        guard let searchResults = searchResults else { return }
+                        self.searchResultList.append(contentsOf: searchResults.items)
+                        self.resultListCollectionView.reloadData()
+                    } else {
+                        // 에러 핸들링
+                        print(error!)
+                    }
                 }
+            
             }
         }
     }
