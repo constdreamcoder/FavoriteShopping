@@ -71,20 +71,48 @@ final class ProfileSettingsViewController: UIViewController {
     }
     
     // MARK: - Custom Methods
-    private func checkNicknameLimitation(text: String) {
-        if text.count < 2 || text.count >= 10 {
-            errorMessageLabel.text = "2글자 이상 10글자 미만으로 설정해주세요"
-            errorMessageLabel.textColor = .red
-        } else if text.contains("@") || text.contains("#")
-                    || text.contains("$") || text.contains("%") {
-            errorMessageLabel.text = "닉네임에 @, #, $, %는 포함할 수 없어요"
-            errorMessageLabel.textColor = .red
-        } else if text.filter({ $0.isNumber }).count >= 1 {
-            errorMessageLabel.text = "닉네임에 숫자는 포함할 수 없어요"
-            errorMessageLabel.textColor = .red
-        } else {
+    private func checkNicknameValidationAndShowErrorMessage(text: String) {
+        do {
+            try validateNickname(text: text)
             errorMessageLabel.text = "사용할 수 있는 닉네임이에요"
             errorMessageLabel.textColor = Colors.pointColor
+        } catch {
+            switch error {
+            case NicknameValidationError.notInBetweenTwoAndTenLetters:
+                print("2글자 이상 10글자 미만으로 설정해주세요")
+                showErrorMessage(error: NicknameValidationError.notInBetweenTwoAndTenLetters)
+            case NicknameValidationError.containUnallowedSpecialCharacters:
+                print("닉네임에 @, #, $, %는 포함할 수 없어요")
+                showErrorMessage(error: NicknameValidationError.containUnallowedSpecialCharacters)
+            case NicknameValidationError.containNumbers:
+                print("닉네임에 숫자는 포함할 수 없어요")
+                showErrorMessage(error: NicknameValidationError.containNumbers)
+            default:
+                print("알 수 없는 오류입니다.")
+            }
+        }
+    }
+    
+    private func showErrorMessage(error: NicknameValidationError) {
+        errorMessageLabel.text = error.errorMessage
+        errorMessageLabel.textColor = error.errorMessageTextColor
+    }
+    
+    private func validateNickname(text: String) throws {
+        guard text.count >= 2 && text.count < 10
+        else {
+            throw NicknameValidationError.notInBetweenTwoAndTenLetters
+        }
+        
+        guard !text.contains("@") && !text.contains("#")
+                    && !text.contains("$") && !text.contains("%")
+        else {
+            throw NicknameValidationError.containUnallowedSpecialCharacters
+        }
+        
+        guard text.filter({ $0.isNumber }).count < 1
+        else {
+            throw NicknameValidationError.containNumbers
         }
     }
 }
@@ -105,7 +133,7 @@ extension ProfileSettingsViewController {
     
     @objc private func completeProfileSetting() {
        
-        checkNicknameLimitation(text: nicknameTextField.text!)
+        checkNicknameValidationAndShowErrorMessage(text: nicknameTextField.text!)
 
         if errorMessageLabel.textColor == Colors.pointColor {
             UserDefaults.standard.set(true, forKey: UserDefaultsKeys.userLoginState.rawValue)
@@ -214,7 +242,6 @@ extension ProfileSettingsViewController: UIViewControllerConfigurationProtocol {
     
     func configureUI() {
         view.backgroundColor = Colors.backgroundColor
-        print("width: \(profileButton.frame.width)")
         
         profileButton.layer.cornerRadius = profileButtonWidth / 2
         profileButton.clipsToBounds = true
@@ -268,6 +295,6 @@ extension ProfileSettingsViewController: UIViewControllerConfigurationProtocol {
 extension ProfileSettingsViewController: UITextFieldDelegate {
     
     func textFieldDidChangeSelection(_ textField: UITextField) {
-        checkNicknameLimitation(text: textField.text!)
+        checkNicknameValidationAndShowErrorMessage(text: textField.text!)
     }
 }

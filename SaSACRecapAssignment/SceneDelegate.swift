@@ -12,8 +12,6 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-
-        configureLocalNotifications()
         
         let userLoginState = UserDefaults.standard.bool(forKey: UserDefaultsKeys.userLoginState.rawValue)
 
@@ -67,25 +65,5 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Called as the scene transitions from the foreground to the background.
         // Use this method to save data, release shared resources, and store enough scene-specific state information
         // to restore the scene back to its current state.
-    }
-}
-
-extension SceneDelegate {
-    func configureLocalNotifications() {
-        let content = UNMutableNotificationContent()
-        content.title = "쇼핑 리스트 관리!!"
-        content.body = "쇼핑 리스트를 관리해주세요!"
-        
-        var dateComponents = DateComponents()
-        dateComponents.hour = 15
-        
-        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
-        let request = UNNotificationRequest(identifier: "\(Date())", content: content, trigger: trigger)
-        
-        UNUserNotificationCenter.current().add(request) { error in
-            if let error = error {
-                print("Notification Error: ", error)
-            }
-        }
     }
 }

@@ -18,6 +18,8 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
             print(success, error)
         }
         
+        configureLocalNotifications()
+        
         return true
     }
 
@@ -39,5 +41,25 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 extension AppDelegate: UNUserNotificationCenterDelegate {
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         completionHandler([.badge, .banner, .list, .sound])
+    }
+}
+
+extension AppDelegate {
+    func configureLocalNotifications() {
+        let content = UNMutableNotificationContent()
+        content.title = "쇼핑 리스트 관리!!"
+        content.body = "쇼핑 리스트를 관리해주세요!"
+        
+        var dateComponents = DateComponents()
+        dateComponents.hour = 15
+        
+        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
+        let request = UNNotificationRequest(identifier: "\(Date())", content: content, trigger: trigger)
+        
+        UNUserNotificationCenter.current().add(request) { error in
+            if let error = error {
+                print("Notification Error: ", error)
+            }
+        }
     }
 }
