@@ -197,20 +197,21 @@ extension SearchViewController: UITableViewConfigrationProtocol {
 extension SearchViewController: UISearchBarDelegate {
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        if searchBar.text != "" {
-            
-            ShoppingURLSession.shared.fetchShoppingResults(keyword: searchBar.text!) { searchResults, error in
+        let keyword = searchBar.text!.trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        if keyword != "" {
+            ShoppingURLSession.shared.fetchShoppingResults(keyword: keyword.lowercased()) { searchResults, error in
 
                 if error == nil {
                     let searchResultsVC = self.storyboard?.instantiateViewController(withIdentifier: SearchResultsViewController.identifier) as! SearchResultsViewController
                     
                     guard let searchResults = searchResults else { return }
                     
-                    searchResultsVC.keyword = searchBar.text!
+                    searchResultsVC.keyword = keyword
                     searchResultsVC.searchResultList = searchResults.items
                     searchResultsVC.totalNumberSearched = searchResults.total
                     
-                    self.recentKeywordList.insert(searchBar.text!, at: 0)
+                    self.recentKeywordList.insert(keyword, at: 0)
                     UserDefaults.standard.set(self.recentKeywordList, forKey: UserDefaultsKeys.recentKeywordList.rawValue)
                     
                     self.navigationController?.pushViewController(searchResultsVC, animated: true)
@@ -229,7 +230,7 @@ extension SearchViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let recentKeyword = recentKeywordList[indexPath.row]
         searchBar.text = recentKeyword
-        ShoppingURLSession.shared.fetchShoppingResults(keyword: recentKeyword) { searchResults, error in
+        ShoppingURLSession.shared.fetchShoppingResults(keyword: recentKeyword.lowercased()) { searchResults, error in
             
             if error == nil {
                 let searchResultsVC = self.storyboard?.instantiateViewController(withIdentifier: SearchResultsViewController.identifier) as! SearchResultsViewController
