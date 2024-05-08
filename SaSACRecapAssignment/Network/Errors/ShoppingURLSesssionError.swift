@@ -12,4 +12,6 @@ enum ShoppingURLSesssionError: Error {
     case noData
     case invalidResponse
     case invalidData
+    case invalidURL
+    case unknownError
 }

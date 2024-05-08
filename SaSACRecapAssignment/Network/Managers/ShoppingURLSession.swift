@@ -17,9 +17,8 @@ final class ShoppingURLSession {
         keyword: String,
         sortingStandard: SortingStandard = .byAccuracy,
         start: Int = 1,
-        display: Int = 30,
-        completionHandler: @escaping (SearchResultsModel?, ShoppingURLSesssionError?) -> Void
-    ) {
+        display: Int = 30
+    ) async throws -> SearchResultsModel {
         if let query = keyword.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
             
             let baseURL = "https://openapi.naver.com/v1/search/shop.json"
@@ -33,52 +32,34 @@ final class ShoppingURLSession {
                 URLQueryItem(name: "start", value: "\(start)")
             ]
             
-            guard let url = urlComponents?.url else { return }
+            guard let url = urlComponents?.url else {
+                throw ShoppingURLSesssionError.invalidURL
+            }
+            
             var urlRequest = URLRequest(url: url)
             
             urlRequest.allHTTPHeaderFields = [
                 "X-Naver-Client-Id": APIKeys.clientID,
                 "X-Naver-Client-Secret": APIKeys.clientSecret
             ]
+           
+            let (data, response) = try await URLSession.shared.data(for: urlRequest)
             
-            URLSession.shared.dataTask(with: urlRequest) { data, response, error in
-                DispatchQueue.main.async {
-                    
-                    
-                    guard error == nil else {
-                        print("네트워크 오류")
-                        completionHandler(nil, .failedRequest)
-                        return
-                    }
-                    
-                    guard let data = data else {
-                        print("네트워크 통신은 성공했지만, data를 수신받지 못함")
-                        completionHandler(nil, .noData)
-                        return
-                    }
-                    
-                    guard let response = response as? HTTPURLResponse else {
-                        print("네트워크 통신은 성공했지만, response를 수신받지 못함")
-                        completionHandler(nil, .invalidResponse)
-                        return
-                    }
-                    
-                    guard (200..<300).contains(response.statusCode) else {
-                        print("네트워크 통신은 성공했지만, 올바른 값이 오지 않음")
-                        completionHandler(nil, .failedRequest)
-                        return
-                    }
-                    
-                    do {
-                        let decodedResults = try JSONDecoder().decode(SearchResultsModel.self, from: data)
-                        completionHandler(decodedResults, nil)
-                    } catch {
-                        completionHandler(nil, .invalidData)
-                        print(error)
-                    }
-                }
-            }.resume()
+            guard let response = response as? HTTPURLResponse else {
+                throw ShoppingURLSesssionError.invalidResponse
+            }
+        
+            guard (200..<300).contains(response.statusCode) else {
+                throw ShoppingURLSesssionError.failedRequest
+            }
             
+            do {
+                let decodedResults = try JSONDecoder().decode(SearchResultsModel.self, from: data)
+                return decodedResults
+            } catch {
+                throw ShoppingURLSesssionError.invalidData
+            }
         }
+        throw ShoppingURLSesssionError.unknownError
     }
 }
