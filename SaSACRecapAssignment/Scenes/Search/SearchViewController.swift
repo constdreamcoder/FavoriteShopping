@@ -200,26 +200,19 @@ extension SearchViewController: UISearchBarDelegate {
         let keyword = searchBar.text!.trimmingCharacters(in: .whitespacesAndNewlines)
         
         if keyword != "" {
-            ShoppingURLSession.shared.fetchShoppingResults(keyword: keyword.lowercased()) { searchResults, error in
-
-                if error == nil {
-                    let searchResultsVC = self.storyboard?.instantiateViewController(withIdentifier: SearchResultsViewController.identifier) as! SearchResultsViewController
-                    
-                    guard let searchResults = searchResults else { return }
-                    
-                    searchResultsVC.keyword = keyword
-                    searchResultsVC.searchResultList = searchResults.items
-                    searchResultsVC.totalNumberSearched = searchResults.total
-                    
-                    self.recentKeywordList.insert(keyword, at: 0)
-                    UserDefaults.standard.set(self.recentKeywordList, forKey: UserDefaultsKeys.recentKeywordList.rawValue)
-                    
-                    self.navigationController?.pushViewController(searchResultsVC, animated: true)
-                } else {
-                    // 에러 처리
-                    print(error!)
-                }
-               
+            Task {
+                let searchResults =  try await ShoppingManager.shared.fetchShoppingResults(keyword: keyword.lowercased())
+                
+                let searchResultsVC = self.storyboard?.instantiateViewController(withIdentifier: SearchResultsViewController.identifier) as! SearchResultsViewController
+                                
+                searchResultsVC.keyword = keyword
+                searchResultsVC.searchResultList = searchResults.items
+                searchResultsVC.totalNumberSearched = searchResults.total
+                
+                self.recentKeywordList.insert(keyword, at: 0)
+                UserDefaults.standard.set(self.recentKeywordList, forKey: UserDefaultsKeys.recentKeywordList.rawValue)
+                
+                self.navigationController?.pushViewController(searchResultsVC, animated: true)
             }
         }
     }
@@ -230,25 +223,20 @@ extension SearchViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let recentKeyword = recentKeywordList[indexPath.row]
         searchBar.text = recentKeyword
-        ShoppingURLSession.shared.fetchShoppingResults(keyword: recentKeyword.lowercased()) { searchResults, error in
+        
+        Task {
+            let searchResults = try await ShoppingManager.shared.fetchShoppingResults(keyword: recentKeyword.lowercased())
             
-            if error == nil {
-                let searchResultsVC = self.storyboard?.instantiateViewController(withIdentifier: SearchResultsViewController.identifier) as! SearchResultsViewController
-                
-                guard let searchResults = searchResults else { return }
-                
-                searchResultsVC.keyword = recentKeyword
-                searchResultsVC.searchResultList = searchResults.items
-                searchResultsVC.totalNumberSearched = searchResults.total
-                
-                self.recentKeywordList.insert(recentKeyword, at: 0)
-                UserDefaults.standard.set(self.recentKeywordList, forKey: UserDefaultsKeys.recentKeywordList.rawValue)
-                
-                self.navigationController?.pushViewController(searchResultsVC, animated: true)
-            } else {
-                // 에러 처리
-                print(error!)
-            }
+            let searchResultsVC = storyboard?.instantiateViewController(withIdentifier: SearchResultsViewController.identifier) as! SearchResultsViewController
+                        
+            searchResultsVC.keyword = recentKeyword
+            searchResultsVC.searchResultList = searchResults.items
+            searchResultsVC.totalNumberSearched = searchResults.total
+            
+            recentKeywordList.insert(recentKeyword, at: 0)
+            UserDefaults.standard.set(recentKeywordList, forKey: UserDefaultsKeys.recentKeywordList.rawValue)
+            
+            navigationController?.pushViewController(searchResultsVC, animated: true)
         }
     }
 }

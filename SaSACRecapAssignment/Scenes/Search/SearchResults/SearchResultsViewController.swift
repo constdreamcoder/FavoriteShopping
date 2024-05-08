@@ -76,23 +76,14 @@ final class SearchResultsViewController: UIViewController {
     private func getShoppingResultsBySortingStandard(sortingStandard: SortingStandard) {
         self.sortingStandard = sortingStandard
         
-        ShoppingURLSession.shared.fetchShoppingResults(
-            keyword: keyword,
-            sortingStandard: sortingStandard
-        ) { searchResults, error in
+        Task {
+            let searchResults = try await ShoppingManager.shared.fetchShoppingResults(keyword: keyword, sortingStandard: sortingStandard)
+                    
+            start = 1
+            searchResultList = searchResults.items
+            resultListCollectionView.reloadData()
             
-            if error == nil {
-                guard let searchResults = searchResults else { return }
-            
-                self.start = 1
-                self.searchResultList = searchResults.items
-                self.resultListCollectionView.reloadData()
-                
-                self.resultListCollectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .top, animated: true)
-            } else {
-                // 에러 처리
-                print(error!)
-            }
+            resultListCollectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .top, animated: true)
         }
     }
 }
@@ -287,22 +278,17 @@ extension SearchResultsViewController: UICollectionViewDataSourcePrefetching {
         for item in indexPaths {
             if start <= 1000 && totalNumberSearched > display + start && searchResultList.count - 4 == item.item {
                 start += display
-                ShoppingURLSession.shared.fetchShoppingResults(
-                    keyword: self.keyword,
-                    sortingStandard: self.sortingStandard,
-                    start: self.start,
-                    display: totalNumberSearched < display + start ? totalNumberSearched % display : display
-                ) { searchResults, error in
-                    if error == nil {
-                        guard let searchResults = searchResults else { return }
-                        self.searchResultList.append(contentsOf: searchResults.items)
-                        self.resultListCollectionView.reloadData()
-                    } else {
-                        // 에러 핸들링
-                        print(error!)
-                    }
+                
+                Task {
+                    let searchResults = try await ShoppingManager.shared.fetchShoppingResults(
+                        keyword: keyword,
+                        sortingStandard: sortingStandard,
+                        start: start,
+                        display: totalNumberSearched < display + start ? totalNumberSearched % display : display
+                    )
+                    searchResultList.append(contentsOf: searchResults.items)
+                    resultListCollectionView.reloadData()
                 }
-            
             }
         }
     }

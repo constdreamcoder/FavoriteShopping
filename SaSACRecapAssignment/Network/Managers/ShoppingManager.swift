@@ -8,6 +8,10 @@
 import Foundation
 import Alamofire
 
+enum NetworkError: Error {
+    case unknownError
+}
+
 final class ShoppingManager {
     
     static let shared = ShoppingManager()
@@ -18,9 +22,8 @@ final class ShoppingManager {
         keyword: String,
         sortingStandard: SortingStandard = .byAccuracy,
         start: Int = 1,
-        display: Int = 30,
-        completionHandler: @escaping (SearchResultsModel) -> Void
-    ) {
+        display: Int = 30
+    ) async throws -> SearchResultsModel {
         if let query = keyword.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
             let urlString = "https://openapi.naver.com/v1/search/shop.json?query=\(query)&display=\(display)&sort=\(sortingStandard.rawValue)&start=\(start)"
             
@@ -29,17 +32,19 @@ final class ShoppingManager {
                 "X-Naver-Client-Secret": APIKeys.clientSecret
             ]
             
-            AF.request(urlString, method: .get, headers: headers)
+            let dataTask = AF.request(urlString, method: .get, headers: headers)
                 .validate(statusCode: 200..<300)
-                .responseDecodable(of: SearchResultsModel.self) { response in
-                    switch response.result {
-                    case .success(let success):
-                        dump(success)
-                        completionHandler(success)
-                    case .failure(let failure):
-                        print(failure)
-                    }
-                }
+                .serializingDecodable(SearchResultsModel.self)
+            
+            let result = await dataTask.result
+            
+            switch result {
+            case .success(let success):
+                return success
+            case .failure(let failure):
+                throw failure
+            }
         }
+        throw NetworkError.unknownError
     }
 }
