@@ -259,7 +259,7 @@ extension SearchResultsViewController: UICollectionViewDataSource {
         let placeholderImage = UIImage(named: Images.noImage)
         cell.thumbnailImageView.kf.setImage(with: url, placeholder: placeholderImage)
         cell.mallNameLabel.text = result.mallName
-        cell.titleLabel.text = result.title
+        cell.titleLabel.text = result.title.htmlTagEraser
         cell.priceLabel.text = Int(result.lprice)?.putCommaEveryThreeDigits
         
         cell.productId = result.productId
@@ -278,13 +278,13 @@ extension SearchResultsViewController: UICollectionViewDataSourcePrefetching {
         for item in indexPaths {
             if start <= 1000 && totalNumberSearched > display + start && searchResultList.count - 4 == item.item {
                 start += display
-                
+            
                 Task {
                     let searchResults = try await ShoppingManager.shared.fetchShoppingResults(
                         keyword: keyword,
                         sortingStandard: sortingStandard,
                         start: start,
-                        display: totalNumberSearched < display + start ? totalNumberSearched % display : display
+                        display: display
                     )
                     searchResultList.append(contentsOf: searchResults.items)
                     resultListCollectionView.reloadData()

@@ -51,7 +51,7 @@ extension AppDelegate {
         content.body = "쇼핑 리스트를 관리해주세요!"
         
         var dateComponents = DateComponents()
-        dateComponents.hour = 15
+        dateComponents.hour = 19
         
         let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
         let request = UNNotificationRequest(identifier: "\(Date())", content: content, trigger: trigger)

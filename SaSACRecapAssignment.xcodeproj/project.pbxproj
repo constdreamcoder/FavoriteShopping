@@ -13,6 +13,8 @@
 		0008FA442B5904D500BF4114 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0008FA432B5904D500BF4114 /* Assets.xcassets */; };
 		0008FA472B5904D500BF4114 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0008FA452B5904D500BF4114 /* LaunchScreen.storyboard */; };
 		0008FA4F2B59051E00BF4114 /* OnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0008FA4E2B59051E00BF4114 /* OnboardingViewController.swift */; };
+		001160102C05CBF400BF9126 /* APIKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0011600F2C05CBF400BF9126 /* APIKeys.swift */; };
+		001160122C05F92D00BF9126 /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 001160112C05F92D00BF9126 /* String+Extension.swift */; };
 		002F1BBD2B590F5B00FB5FB6 /* UIViewControllerConfigurationProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 002F1BBC2B590F5B00FB5FB6 /* UIViewControllerConfigurationProtocol.swift */; };
 		002F1BC02B59104B00FB5FB6 /* ProfileSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 002F1BBF2B59104B00FB5FB6 /* ProfileSettingsViewController.swift */; };
 		002F1BC42B5910FA00FB5FB6 /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 002F1BC32B5910FA00FB5FB6 /* UIViewController+Extension.swift */; };
@@ -32,7 +34,6 @@
 		0059BBD22B5A811200085835 /* ResultListCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0059BBD02B5A811200085835 /* ResultListCollectionViewCell.swift */; };
 		0059BBD62B5AB7D100085835 /* SearchDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0059BBD52B5AB7D100085835 /* SearchDetailViewController.swift */; };
 		009E2D822B5BAD81008D5146 /* SortingStandard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 009E2D812B5BAD81008D5146 /* SortingStandard.swift */; };
-		009E2D842B5BB26B008D5146 /* APIKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 009E2D832B5BB26B008D5146 /* APIKeys.swift */; };
 		009E2D872B5BB6A1008D5146 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 009E2D862B5BB6A1008D5146 /* Alamofire */; };
 		009E2D8A2B5BB6BB008D5146 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 009E2D892B5BB6BB008D5146 /* Kingfisher */; };
 		009E2D8C2B5BB747008D5146 /* ShoppingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 009E2D8B2B5BB747008D5146 /* ShoppingManager.swift */; };
@@ -54,6 +55,8 @@
 		0008FA462B5904D500BF4114 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0008FA482B5904D500BF4114 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0008FA4E2B59051E00BF4114 /* OnboardingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewController.swift; sourceTree = "<group>"; };
+		0011600F2C05CBF400BF9126 /* APIKeys.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIKeys.swift; sourceTree = "<group>"; };
+		001160112C05F92D00BF9126 /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
 		002F1BBC2B590F5B00FB5FB6 /* UIViewControllerConfigurationProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewControllerConfigurationProtocol.swift; sourceTree = "<group>"; };
 		002F1BBF2B59104B00FB5FB6 /* ProfileSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileSettingsViewController.swift; sourceTree = "<group>"; };
 		002F1BC32B5910FA00FB5FB6 /* UIViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
@@ -73,7 +76,6 @@
 		0059BBD02B5A811200085835 /* ResultListCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultListCollectionViewCell.swift; sourceTree = "<group>"; };
 		0059BBD52B5AB7D100085835 /* SearchDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchDetailViewController.swift; sourceTree = "<group>"; };
 		009E2D812B5BAD81008D5146 /* SortingStandard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortingStandard.swift; sourceTree = "<group>"; };
-		009E2D832B5BB26B008D5146 /* APIKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKeys.swift; sourceTree = "<group>"; };
 		009E2D8B2B5BB747008D5146 /* ShoppingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingManager.swift; sourceTree = "<group>"; };
 		009E2D8F2B5BBB41008D5146 /* SearchResultsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultsModel.swift; sourceTree = "<group>"; };
 		009E2D912B5BE07C008D5146 /* Int+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Int+Extension.swift"; sourceTree = "<group>"; };
@@ -125,7 +127,7 @@
 				002F1BC22B5910C300FB5FB6 /* Extensions */,
 				0059BBC82B5A5FF000085835 /* Enums */,
 				002F1BDF2B59425600FB5FB6 /* Resources */,
-				009E2D832B5BB26B008D5146 /* APIKeys.swift */,
+				0011600F2C05CBF400BF9126 /* APIKeys.swift */,
 				0008FA402B5904C800BF4114 /* Main.storyboard */,
 				0008FA432B5904D500BF4114 /* Assets.xcassets */,
 				0008FA452B5904D500BF4114 /* LaunchScreen.storyboard */,
@@ -168,6 +170,7 @@
 				002F1BD02B5923FD00FB5FB6 /* UICollectionViewCell+Extension.swift */,
 				0031646E2B5948AE00AC51B2 /* UITableView+Extension.swift */,
 				009E2D912B5BE07C008D5146 /* Int+Extension.swift */,
+				001160112C05F92D00BF9126 /* String+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -378,7 +381,6 @@
 				002F1BBD2B590F5B00FB5FB6 /* UIViewControllerConfigurationProtocol.swift in Sources */,
 				0008FA3B2B5904C800BF4114 /* AppDelegate.swift in Sources */,
 				00BDAD822B70F0B100368A1D /* ShoppingURLSesssionError.swift in Sources */,
-				009E2D842B5BB26B008D5146 /* APIKeys.swift in Sources */,
 				0059BBC72B5A5FCE00085835 /* UserDefaultsKeys.swift in Sources */,
 				009E2D902B5BBB41008D5146 /* SearchResultsModel.swift in Sources */,
 				002F1BC62B591CD700FB5FB6 /* Colors.swift in Sources */,
@@ -387,6 +389,7 @@
 				0031646F2B5948AE00AC51B2 /* UITableView+Extension.swift in Sources */,
 				002F1BC92B59204700FB5FB6 /* ProfileSelectionViewController.swift in Sources */,
 				009E2D8C2B5BB747008D5146 /* ShoppingManager.swift in Sources */,
+				001160102C05CBF400BF9126 /* APIKeys.swift in Sources */,
 				002F1BE12B59446700FB5FB6 /* UITableViewConfigrationProtocol.swift in Sources */,
 				0008FA4F2B59051E00BF4114 /* OnboardingViewController.swift in Sources */,
 				0059BBCF2B5A78DF00085835 /* SearchResultsViewController.swift in Sources */,
@@ -399,6 +402,7 @@
 				002F1BCB2B59224E00FB5FB6 /* UICollectionViewConfigurationProtocol.swift in Sources */,
 				0008FA3D2B5904C800BF4114 /* SceneDelegate.swift in Sources */,
 				002F1BD52B59331400FB5FB6 /* ProfileListCollectionViewCell.swift in Sources */,
+				001160122C05F92D00BF9126 /* String+Extension.swift in Sources */,
 				002F1BD12B5923FD00FB5FB6 /* UICollectionViewCell+Extension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
