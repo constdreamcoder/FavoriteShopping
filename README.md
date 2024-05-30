@@ -299,7 +299,6 @@ func configureLocalNotifications() {
 </details>
 
 <br/>
-<br/>
 
 ## 🔥 트러블 슈팅
 
@@ -346,16 +345,16 @@ func configureLocalNotifications() {
     <summary><b>열거형으로 정의된 UserDefaults Key</b></summary>
     <div markdown="1">
 
-    ```swift
-    enum UserDefaultsKeys: String, CaseIterable {
-        case nickname = "Nickname"
-        case userLoginState = "UserLoginState"
-        case heartPressedList = "HeartPressedList"
-        case recentKeywordList = "RecentKeywordList"
-        case selectedProfileImageName = "SelectedProfileImageName"
-        case currentProfileImageName = "CurrentProfileImageName"
-    }
-    ```
+  ```swift
+  enum UserDefaultsKeys: String, CaseIterable {
+      case nickname = "Nickname"
+      case userLoginState = "UserLoginState"
+      case heartPressedList = "HeartPressedList"
+      case recentKeywordList = "RecentKeywordList"
+      case selectedProfileImageName = "SelectedProfileImageName"
+      case currentProfileImageName = "CurrentProfileImageName"
+  }
+  ```
 
     </div>
     </details>
@@ -378,26 +377,26 @@ func configureLocalNotifications() {
     <summary><b>열거형으로 정의된 UserDefaults Key</b></summary>
     <div markdown="1">
 
-    ```swift
-    var htmlTagEraser: String {
-      // 문자열을 UTF-8 인코딩된 Data로 변환
-      guard let data = self.data(using: .utf8) else { return self }
-      
-      // NSAttributedString의 초기화에 사용할 옵션 정의
-      let options: [NSAttributedString.DocumentReadingOptionKey: Any] = [
-          .documentType: NSAttributedString.DocumentType.html, // 문서 유형을 HTML로 설정
-          .characterEncoding: String.Encoding.utf8.rawValue // 문자 인코딩을 UTF-8로 설정
-      ]
-      
-      do {
-          // NSAttributedString을 사용하여 HTML 데이터를 디코딩하여 일반 문자열로 변환
-          let attributed = try NSAttributedString(data: data, options: options, documentAttributes: nil)
-          return attributed.string // 변환된 문자열을 반환
-      } catch {
-          return self // 변환에 실패하면 원래 문자열을 반환
-      }
+  ```swift
+  var htmlTagEraser: String {
+    // 문자열을 UTF-8 인코딩된 Data로 변환
+    guard let data = self.data(using: .utf8) else { return self }
+
+    // NSAttributedString의 초기화에 사용할 옵션 정의
+    let options: [NSAttributedString.DocumentReadingOptionKey: Any] = [
+        .documentType: NSAttributedString.DocumentType.html, // 문서 유형을 HTML로 설정
+        .characterEncoding: String.Encoding.utf8.rawValue // 문자 인코딩을 UTF-8로 설정
+    ]
+
+    do {
+        // NSAttributedString을 사용하여 HTML 데이터를 디코딩하여 일반 문자열로 변환
+        let attributed = try NSAttributedString(data: data, options: options, documentAttributes: nil)
+        return attributed.string // 변환된 문자열을 반환
+    } catch {
+        return self // 변환에 실패하면 원래 문자열을 반환
     }
-    ```
+  }
+  ```
 
     </div>
     </details>
