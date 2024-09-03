@@ -1,45 +1,60 @@
-# Favorite Shopping - 나만의 쇼핑 앱
+# PicPoint - 사진 스팟 공유 앱
 
-<p align="center">
-  <img src="https://github.com/constdreamcoder/SaSACRecap/assets/95998675/3525e2b0-b3db-40cd-af49-f4ec06abf3c7" align="center" width="100%">
+<p>
+    <img src="https://github.com/constdreamcoder/SaSACRecap/assets/95998675/3525e2b0-b3db-40cd-af49-f4ec06abf3c7" align="center" width="100%"/>
 </p>
 
 <br/>
 
-## Favorite Shopping
+## PicPoint
 
-- 서비스 소개: 원하는 상품을 검색할 수 있는 앱
+- 서비스 소개: 원하는 상품을 건색할 수 있는 앱
 - 개발 인원: 1인
 - 개발 기간: 24.01.21 ~ 24.01.24(총 4일)
 - 개발 환경
-
   - 최소버전: iOS 15
   - Portrait Orientation 지원
   - 라이트 모드 지원
 
-  <br/>
+<br/>
 
 ## 💪 주요 기능
 
 - 상품 검색 기능
 - 선호 상품 찜 기능
 - 프로필 캐릭터 선택 / 수정 기능
+- 쇼핑 스케줄 관리 기능
 
-  <br/>
+<br/>
 
 ## 🛠 기술 소개
 
-- SnapKit을 통한 Code-Based UI로 전환
+- UIKit
+- MVC, StoryBoard, SnapKit
+- Alamofire, Kingfisher
+- UserDefaults
+- Local Notification, Naver Shopping API
+
+<br/>
+
+## 💻 기술 적용
+
+- Alamofire를 활용한 네트워크 요청 코드 간소화
+- 네이버 쇼핑 API를 통한 상품 검색 기능 구현
+- UserDefaults를 활용한 찜한 데이터 저장
+- IBOutlet/IBAction 연결을 통한 UI 요소와 코드 간의 연결 및 액션 정의
+- UIStackView를 활용한 UI 정렬
+- SnapKit을 활용한 일부 뷰 코드 기반 UI로 전환
+- prefetch를 이용한 Offset-Based Pagination 구현
+- Local Notification를 활용한 유저 알림 구성
+- Error 프로토콜을 준수하는 에러 정의를 통해 사용자 닉네임 유효성 검사 에러 처리
+- WKWebView를 활용한 웹 콘텐츠 표시
 - Kingfisher를 통한 외부 이미지 다운로드
-- Alamofire를 통한 네트워크 코드 간소화
 - Swift Concurrency를 활용한 직관적인 네트워크 코드 구성
-- Local Notificaition를 통한 유저 알림 구성
-- 네이버 쇼핑 API를 통한 상품 검색
-- prefetch를 이용한 Cursor 기반 Pagination 구현
 
-  <br/>
+<br/>
 
-## 💻 구현 내용
+## 💾 구현 내용
 
 ### 1. SnapKit을 통한 Code-Based UI로 전환
 
