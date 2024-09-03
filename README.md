@@ -39,18 +39,18 @@
 
 ## 💻 기술 적용
 
-- Alamofire를 활용한 네트워크 요청 코드 간소화
-- 네이버 쇼핑 API를 통한 상품 검색 기능 구현
-- UserDefaults를 활용한 찜한 데이터 저장
-- IBOutlet/IBAction 연결을 통한 UI 요소와 코드 간의 연결 및 액션 정의
-- UIStackView를 활용한 UI 정렬
-- SnapKit을 활용한 일부 뷰 코드 기반 UI로 전환
-- prefetch를 이용한 Offset-Based Pagination 구현
-- Local Notification를 활용한 유저 알림 구성
-- Error 프로토콜을 준수하는 에러 정의를 통해 사용자 닉네임 유효성 검사 에러 처리
-- WKWebView를 활용한 웹 콘텐츠 표시
-- Kingfisher를 통한 외부 이미지 다운로드
-- Swift Concurrency를 활용한 직관적인 네트워크 코드 구성
+- **Alamofire**를 활용한 네트워크 요청 코드 간소화
+- **UserDefaults**를 활용한 찜한 데이터 저장
+- **IBOutlet/IBAction** 연결을 통한 UI 요소와 코드 간의 연결 및 액션 정의
+- **UIStackView**를 활용한 UI 정렬
+- **SnapKit**을 활용한 일부 뷰 코드 기반 UI로 전환
+- **prefetch**를 이용한 **Offset-Based Pagination** 구현
+- **Local Notification**를 활용한 유저 알림 구성
+- **Error** 프로토콜을 준수하는 에러 정의를 통해 사용자 닉네임 유효성 검사 에러 처리
+- **WKWebView**를 활용한 웹 콘텐츠 표시
+- **Kingfisher**를 통한 외부 이미지 다운로드
+- **Swift Concurrency**를 활용한 직관적인 네트워크 코드 구성
+- **Naver Shopping API**를 통한 상품 검색 기능 구현
 
 <br/>
 
