@@ -27,6 +27,18 @@
 
 <br/>
 
+## 📷 스크린샷
+
+|검색 화면|검색 결과 화면|상세 화면|프로필 화면|
+|:---:|:---:|:---:|:---:|
+|<img src="https://github.com/user-attachments/assets/1a6693a4-86df-4b54-8830-6daa4109b0b5" width="200" height="390"/>|<img src="https://github.com/user-attachments/assets/8cfd1df3-d38e-4f8f-9c76-fe7523d2c725" width="200" height="390"/>|<img src="https://github.com/user-attachments/assets/1693c9a0-b4f2-4120-91ee-33c2240c3917" width="200" height="390"/>|<img src="https://github.com/user-attachments/assets/639a3ae3-6e3b-49a2-a626-1abb2141157e" width="200" height="390"/>|
+
+|진입 화면|프로필 설정 화화면|프로필 캐릭터 선택 화면|
+|:---:|:---:|:---:|
+|<img src="https://github.com/user-attachments/assets/8d905543-4ed7-4b98-8c41-8f468fa504fd" width="200" height="390"/>|<img src="https://github.com/user-attachments/assets/a79c04b2-415e-4873-b018-8ccf4ded02e9" width="200" height="390"/>|<img src="https://github.com/user-attachments/assets/4fd42ec9-3d03-4068-9157-852d37c7094e" width="200" height="390"/>|
+
+<br/>
+
 ## 🛠 기술 소개
 
 - UIKit
@@ -415,3 +427,4 @@ func configureLocalNotifications() {
 
     </div>
     </details>
+
